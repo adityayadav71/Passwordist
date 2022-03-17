@@ -11,34 +11,38 @@
 </style>
 <body>
     <navbar class="navbar">
-        <a href="index.html"><img class="img1"src="Images/LOGO1.png" alt="Logo"></a>
+        <a href="index.html"><img class="logo"src="Images/LOGO1.png" alt="Logo"></a>
         <ul class="navbarlist">
-           <li class="list">DASHBOARD</li>
-           <li class="list">Hello, Name</li>
-           <li class="list">CONTACT US</li>
-           <li class="list">INFO</li> 
+           <li class="list"><a href="">DASHBOARD</a></li>
+           <li class="list"><a href="">Hello, Name</a></li>
+           <li class="list"><a href="">CONTACT US</a></li>
+           <li class="list"><a href="">INFO</a></li> 
         </ul>
         <a href="index.html"><button>LOGIN</button></a>
     </navbar>
 
     <div class="wrapper">
-        <div class="static-txt">Passwordist is </div>
-            <ul class="dynamic-txts">
-                <li><span>SAFE.</span></li>   
-                <li><span>SECURE.</span></li>   
-                <li><span>RELIABLE.</span></li>   
-            </ul>
+        <div class="static-txt">Passwordist is</div>
+        <ul class="dynamic-txts">
+          <li><span>SAFE.</span></li>
+          <li><span>SECURE.</span></li>
+          <li><span>RELIABLE.</span></li>
+        </ul>
     </div>
-
-    <img style="margin-left: 7%; margin-top: 5%;"src="Images/HomeImage1.jpg" alt="Home Image">
+      
+    <object data="Reset password-rafiki.svg" class="HomeImage" margin-top="-10px" width="500" height="500"> </object>
+    <p style="margin-left: 8%; font-size: 16px; font-weight: 570;">Tired of forgetting and resetting your passwords?<br>
+        No worries, we got your back!</p>
     <div class="formbg">
         <div style="justify-content: center;" class="formheader"><p style="margin-top: 10px;">SIGN UP</p></div>
-        <form method="get">
+        <form action="" method="get">
             <input type="text" class="textbox" placeholder="Email" name="email"><br><br>
             <input type="text" class="textbox" style="top: 40%;" placeholder="Password" name="password"><br><br>
             <input type="submit" class="SIGNUP" id="submit" value="SIGN UP" onclick=""><br><br>
+            <img src="Images/Google Logo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; margin-top: 48%; z-index: 10;">
             <input type="submit" class="google" id="submit" value="Sign up with Google" onclick="">
         </form>
     </div>
+    
 </body>
 </html>
