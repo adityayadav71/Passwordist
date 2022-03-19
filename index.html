@@ -4,7 +4,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
-    <title>Sign up</title>
+     <link rel = "icon" href = "Images/LOGO.ico" type = "image/x-icon">
+    <title>Passwordist</title>
 </head>
 <style>
    
@@ -33,14 +34,14 @@
     <object data="Images/HomeImage1.svg" class="HomeImage" margin-top="-10px" width="500" height="500"> </object>
     <p style="margin-left: 8%; font-size: 16px; font-weight: 570;">Tired of forgetting and resetting your passwords?<br>
         No worries, we got your back!</p>
-    <div class="formbg">
+    <div class="formbg" id="signupborder">
         <div style="justify-content: center;" class="formheader"><p style="margin-top: 10px;">SIGN UP</p></div>
         <form action="" method="get">
             <input type="text" class="textbox" placeholder="Email" name="email"><br><br>
             <input type="text" class="textbox" style="top: 40%;" placeholder="Password" name="password"><br><br>
             <input type="submit" class="SIGNUP" id="submit" value="SIGN UP" onclick=""><br><br>
-            <img src="Images/GoogleLogo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; margin-top: 48%; z-index: 10;">
             <input type="submit" class="google" id="submit" value="Sign up with Google" onclick="">
+            <img src="Images/GoogleLogo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; top: 80%; z-index: 10;">
         </form>
     </div>
     <div class="container">
@@ -63,7 +64,26 @@
             <strong style="font-weight: 700; font-size: 35.72px;">TRY PASSWORDIST TODAY</strong>
             <h3 style="color: rgba(0, 0, 0, 0.6); font-size: 17.86px;">Click below to simplify your digitial life for free </h3>
         </div>
-        <button class="bottomsignup">SIGN UP</button>
+        <button class="bottomsignup" onclick = "scrollToTop()">SIGN UP</button>
+        <script>
+            function scrollToTop(){
+                window.scrollTo({top: 0, behavior: 'smooth'});
+                element = document.getElementById('signupborder');
+                let defaultBG = element.style.boxShadow;
+                let defaultTransition =  "all 1s ease-in-out";
+
+                element.style.transition = "all 1s ease-in-out";
+                element.style.boxShadow = "7.44255px 14.8851px 65.4944px 22.3276px rgba(22, 63, 175, 0.7)";
+
+                setTimeout(function()
+                {
+                    element.style.boxShadow = defaultBG;
+                    setTimeout(function() {
+                        element.style.transition =  defaultTransition;
+                    }, 1500);
+                }, 1500);
+            }
+        </script>
         <div class="bottomlinks">
             <a style="padding-right: 60px;" href="">Instagram</a>
             <a style="padding-right: 60px;" href="">Twitter</a>
