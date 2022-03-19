@@ -44,20 +44,26 @@
             <img src="Images/GoogleLogo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; top: 80%; z-index: 10;">
         </form>
     </div>
+    <div class="contain reveal">
     <div class="container">
         <img  class="featimg" src="Images/HomeImage2.jpg" alt="">
         <h1 class="feat-title">Say Goodbye to Password Fuss</h1>
         <p class="feat-words">Passwordist helps manage all your passwords so you won’t have to. Sign in with your master password to access passwords to all your accounts be it digital or not.</p>
+        </div>
     </div>
+    <div class="contain reveal">
     <div class="container-2">
         <img class="featimgright" src="Images/HomeImage3.jpg" alt="">
         <h1 class="feat-title-left">Keep your Data Secure</h1>
         <p class="feat-words-left">Easily create unique, complex passwords for all your logins and keep them locked securely in our encrypted vault.</p>  
     </div>
+    </div>
+    <div class="contain reveal">
     <div class="container">
         <img  class="featimg" src="Images/HomeImage2.jpg" alt="">
         <h1 class="feat-title">Categorize your passwords</h1>
         <p class="feat-words">Too many passwords? Create categories to store your passwords for faster access.</p>
+    </div>
     </div>
     <div class="band">
         <div class="footer">
@@ -83,6 +89,22 @@
                     }, 1500);
                 }, 1500);
             }
+            function reveal() {
+                var reveals = document.querySelectorAll(".reveal");
+
+                for (var i = 0; i < reveals.length; i++) {
+                    var windowHeight = window.innerHeight;
+                    var elementTop = reveals[i].getBoundingClientRect().top;
+                    var elementVisible = 150;
+
+                    if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                    } else {
+                    reveals[i].classList.remove("active");
+                    }
+                }
+                }
+            window.addEventListener("scroll", reveal);
         </script>
         <div class="bottomlinks">
             <a style="padding-right: 60px;" href="">Instagram</a>
