@@ -30,6 +30,7 @@ a:hover{
 
 .navbarlist{
     list-style-type: none;
+    font-weight: 600;
     padding-left: 8%;
     font-size: 16px;
     margin-bottom: 41px;
@@ -39,7 +40,6 @@ a:hover{
 .list{
     float: left;
     padding: 20px;
-    object-fit: contain;
     display: block;
 }
 .logo {
@@ -64,11 +64,6 @@ a:hover{
     outline: none;
     background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
     border-radius: 29.7702px;
-}
-.navbar{
-  margin-left: 10px;
-  font-weight: 600;
-  font-size: 20px;
 }
 .textbox{
     position: absolute;
