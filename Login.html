@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "icon" href = "Images/LOGO.ico" type = "image/x-icon">
+    <title>Login</title>
+</head>
+<body>
+    <style>
+        ::-webkit-input-placeholder{
+            font-family: 'Poppins', sans-serif;
+        }
+        input:focus{
+            padding-left: 20px;
+            padding-right: 20px;
+            outline: 2px solid #5D5FEF;
+        }
+        *{
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .logo {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 3%;
+            height: 7%;
+            top: 2%;
+        }
+        .navbar{
+            margin-bottom: 10px;
+            padding: 5px;
+            box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
+        }
+        .container{
+            display: flex;
+            height: fit-content;
+            margin-top: 2%;
+        }
+        .head-text{
+            margin-left: 5%;
+            padding-right: 10%;
+            font-weight: 400;
+            font-size: 36px;
+            line-height: 76px;
+        }
+        .text{
+            position: relative;
+            width: 50%;
+            margin-left: 50px;
+            left: 0px;
+            margin-right: 10%;
+        }
+        .form{
+            position: relative;
+            right: -141px;
+            width: fit-content;
+            top: 7%;
+        }
+        .textbox{
+            position: absolute;
+            width: 70%;
+            height: 10%;
+            left: 10%;
+            top: 20%;
+            background: #FFFFFF;
+            padding-left: 20px;
+            padding-right: 20px;
+            border-radius: 14.89cm;
+            border: none;
+            outline: none;
+            box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
+            text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+        }
+        .SIGNUP{
+            position: absolute;
+            width: 45%;
+            height: 10%;
+            left: 28%;
+            top: 65%;
+            border: none;
+            outline: none;
+            background: #5D5FEF;
+            border-radius: 23.0719px;
+            text-align: center;
+            color: white;
+            text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+        }
+        .formbg{
+            position: absolute;
+            align-items: center;
+            background-color: #FFFFFF;
+            box-shadow: 7.44255px 14.8851px 65.4944px 22.3276px rgba(0, 0, 0, 0.1);
+            border-radius: 7.44255px;
+            margin-left: 8%;
+            margin-top: 10%;
+            width: 25%;
+            height: 60%;
+        }
+        .formheader{
+            position: absolute;
+            width: 70%;
+            height: 12%;
+            left: 15%;
+            top: -5%;
+            z-index: 1;
+            font-size: 17.8621px;
+            background: #5D5FEF;
+            border-radius: 22.3276px;
+            text-align: center;
+            color: #FFFFFF;
+        }
+        .forgot{
+            position: absolute;
+            left: 75px;
+            top: 80%;
+            text-decoration: none;
+            font-size: small;    
+        }
+    </style>
+    <div class="navbar">
+        <a href="index.html"><img class="logo" src="Images/LOGO.png" alt="Logo"></a>
+    </div>
+    <div class="container">
+            <h1 class="head-text">LOGIN TO YOUR VAULT</h1>
+            <div class="formbg" id="signupborder">
+                <div class="formheader"><p style="margin-top: 10px;">LOGIN</p></div>
+                <form action="" method="get">
+                    <input type="text" class="textbox" placeholder="Email" name="email"><br><br>
+                    <input type="text" class="textbox" style="top: 40%;" placeholder="Master Password" name="password"><br><br>
+                    <input type="submit" class="SIGNUP" id="submit" value="LOGIN" onclick="">
+                </form>
+                <a class="forgot" href="" >Forgot your Master Password?</a>
+            </div>
+        <div class="form">
+            <img src="Images/VAULT.png">
+        </div>
+    </div>
+</body>
+</html>
