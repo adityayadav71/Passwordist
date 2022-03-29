@@ -2,6 +2,9 @@
 ::-webkit-input-placeholder{
     font-family: 'Poppins', sans-serif;
 }
+input:focus{
+    outline: 2px solid #5D5FEF;
+}
 *{
     margin: 0;
     padding: 0;
@@ -10,11 +13,10 @@
     font-style: normal;
 }
 .login {
-    padding-left: 2px;
-    position: absolute;
+    position: relative;
     flex: 0 25%;
-    width: 20%;
-    height: 10%;
+    width: 100%;
+    height: 100%;
     color: #FFFFFF;
     font-weight: 550;
     font-size: 16px;
@@ -26,24 +28,30 @@
     box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
     text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
 }
-.logo {
-    position: absolute;
-    width: 3%;
-    height: 7%;
-    z-index: 1;
-}
 .navbar{
+    position: sticky;
+    align-self: flex-start;
+    top: 3px;
+    overflow-y: auto;
     display:flex;
-    height: 70px;
-    flex-wrap:wrap;
-    flex-direction:row;
+    height: 100px;
     padding-top: 10px;
+    top: 0;
+    background-color: #FFFFFF;
     margin-left: 10%;
+    margin-bottom: 5%;
+}
+.logo {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    z-index: 1;
 }
 .logobox {
     flex: 0 10%;
     height: 50px;
-    padding: 1.5% 1% 2% 4%;
+    padding-top: 10px;
+    padding-left: 30px;
 }
 .searchbox {
     flex: 0 60%;
@@ -52,9 +60,7 @@
 }
 .acco{
     flex: 0 20%;
-    padding: 0% 1% 2% 2%;
     height:50px;
-    
 }
 .search{
     width: 80%;
@@ -69,12 +75,114 @@ input{
     outline: none;
 }
 .session-profile{
-    width: 3em;
-    height: 3em;
+    width: 4em;
+    height: 4em;
     position: absolute;
-    margin-top: -7px;
-    margin-left: -94px;
+    margin-top: -18px;
+    margin-left: -103px;
     margin-right: 0px;
     background-color: aliceblue;
     border-radius: 50%;
 }
+.sidebar {
+    position: fixed;
+    margin: 1% 0% 0% 2%;
+    height: 95%;
+    width: 80px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    border-radius: 20px;
+    background-color: rgba(225, 225, 225, 0.8);
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+.sidebar li {
+    padding: 8px 10px 10px 15px;
+    text-decoration: none;
+    width: 50px;
+    height: 50px;
+    margin-left: 5px;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+  }
+  .sidebar a:hover {
+    color: #f1f1f1;
+  }
+  
+  .sidebar .closebtn {
+    position: absolute;
+    visibility: hidden;
+    color: black;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+  }
+  .sidebar .closebtn:hover{
+      color: black;
+  }
+  
+  .sidebar .openbtn {
+    position: absolute;
+    top: 10px;
+    background: rgba(255, 255, 255, 0);
+    margin-left: 20px;
+    border: none;
+    outline: none;
+    width: 30px;
+    height: 30px;
+  }
+  
+  #main {
+    transition: margin-left .5s;
+    padding: 0px 16px 16px 16px;
+  }
+ .ul-list{
+    padding: 5px 5px;
+    list-style-type: none;
+ }
+ .tab{
+    display: flex;
+ }
+ .tab:focus{
+    border: 2px solid black;
+    border-radius: 50px;
+    margin-bottom: 10px;
+ }
+ p{
+    visibility: hidden;
+    position: fixed;
+    margin-top: 15px;
+    margin-left: 46px;
+    padding-left: 20px;
+    animation: fadeIn linear 5s; -webkit-animation: fadeIn linear 5s; 
+  }
+  @keyframes fadeIn 
+  {
+      0% {opacity:0;}
+      100% {opacity:1;}
+  }
+  
+ li.menu-item {
+    margin:0 0 20px 0;   
+  }
+  .content {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    padding: 10px;
+    margin-left: 10%;
+    transition: margin-left .5s;
+  }
+  .grid-item {
+    background-color: rgba(102, 101, 101, 0.8);
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+    height: 150px;
+    text-align: center;
+  }

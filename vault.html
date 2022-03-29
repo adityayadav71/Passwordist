@@ -9,17 +9,101 @@
     <title>Vault</title>
 </head>
 <body>
-    <div class="navbar">
-        <div class="logobox">
-            <a href="index.html"><img class="logo"src="Images/LOGO.png" alt="Logo"></a>
-        </div>
-        <div class="searchbox">
-            <input class="search" type="textbox" placeholder="Search my Vault">
-        </div>
-        <div class="acco">
-            <a href=""><button class="login"><img class="session-profile" src="">Name</button></a>
-        </div>
-        
+    <div id="mySidebar"class="sidebar">
+        <ul class="ul-list">
+            <button id = "openbtn" class="openbtn" onclick="openNav()"><img src="Images/ellipsis-solid.svg"></button>
+            <a href="javascript:void(0)" id="closebtn" class="closebtn" onclick="closeNav()">×</a>
+            <div class="tab">
+                <li><img src="Images/lock-solid.svg"></li>
+                <p id="list-text-1">Passwords</p>
+            </div>
+            <div class="tab">
+                <li><img src="Images/note-sticky-solid.svg"></li>
+                <p id="list-text-2">Notes</p>
+            </div>
+            <div class="tab">
+                <li><img src="Images/address-book-solid.svg"></li>
+                <p id="list-text-3">Addresses</p>
+            </div>
+            <div class="tab">
+                <li><img src="Images/credit-card-solid.svg"></li>
+                <p id="list-text-4">Credit cards</p>
+            </div>
+            <div class="tab">
+                <li><img src="Images/building-columns-solid.svg"></li>
+                <p id="list-text-5">Bank accounts</p>
+            </div>
+            <div class="tab">
+                <li style="margin-top: 178px;"><img src="Images/gear-solid.svg"></li>
+                <p  style="margin-top: 190px;" id="list-text-6">Settings</p>
+            </div>
+        </ul>
     </div>
+    <div class="main" id="main">
+        <div class="navbar">
+            <div class="logobox">
+                <a href="index.html"><img class="logo"src="Images/LOGO.png" alt="Logo"></a>
+            </div>
+            <div class="searchbox">
+                <input class="search" type="textbox" placeholder="Search my Vault">
+            </div>
+            <div class="acco">
+                <a href=""><button class="login"><img class="session-profile" src="">Name</button></a>
+            </div>
+        </div>  
+        <div class="content">
+            <div class="grid-item">1</div>
+            <div class="grid-item">2</div>
+            <div class="grid-item">3</div>
+            <div class="grid-item">4</div>
+            <div class="grid-item">5</div>
+            <div class="grid-item">6</div>
+            <div class="grid-item">7</div>
+            <div class="grid-item">8</div>
+            <div class="grid-item">9</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+            <div class="grid-item">10</div>
+        </div>
+    </div>
+      
+      <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.getElementById("main").style.marginLeft = "250px";
+            document.getElementById("openbtn").style.visibility = "hidden";
+            document.getElementById("closebtn").style.visibility = "visible";
+            document.getElementById("list-text-1").style.visibility = "visible";
+            document.getElementById("list-text-2").style.visibility = "visible";
+            document.getElementById("list-text-3").style.visibility = "visible";
+            document.getElementById("list-text-4").style.visibility = "visible";
+            document.getElementById("list-text-5").style.visibility = "visible";
+            document.getElementById("list-text-6").style.visibility = "visible";
+        }
+        
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "80px";
+            document.getElementById("main").style.marginLeft= "0";
+            document.getElementById("openbtn").style.visibility = "visible";
+            document.getElementById("closebtn").style.visibility = "hidden";
+            document.getElementById("list-text-1").style.visibility = "hidden";
+            document.getElementById("list-text-2").style.visibility = "hidden";
+            document.getElementById("list-text-3").style.visibility = "hidden";
+            document.getElementById("list-text-4").style.visibility = "hidden";
+            document.getElementById("list-text-5").style.visibility = "hidden";
+            document.getElementById("list-text-6").style.visibility = "hidden";
+        }
+      </script>
 </body>
 </html>
