@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+::-webkit-input-placeholder{
+    font-family: 'Poppins', sans-serif;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+}
+.login {
+    padding-left: 2px;
+    position: absolute;
+    flex: 0 25%;
+    width: 20%;
+    height: 10%;
+    color: #FFFFFF;
+    font-weight: 550;
+    font-size: 16px;
+    line-height: 33px;
+    border: none;
+    outline: none;
+    background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+    border-radius: 29.7702px;
+    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
+    text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+}
+.logo {
+    position: absolute;
+    width: 3%;
+    height: 7%;
+    z-index: 1;
+}
+.navbar{
+    display:flex;
+    height: 70px;
+    flex-wrap:wrap;
+    flex-direction:row;
+    padding-top: 10px;
+    margin-left: 10%;
+}
+.logobox {
+    flex: 0 10%;
+    height: 50px;
+    padding: 1.5% 1% 2% 4%;
+}
+.searchbox {
+    flex: 0 60%;
+    height:50px;
+    padding: 1% 1% 2% 4%;
+}
+.acco{
+    flex: 0 20%;
+    padding: 0% 1% 2% 2%;
+    height:50px;
+    
+}
+.search{
+    width: 80%;
+    height: 40px;
+}
+input{
+    padding-left: 3%;
+    border-radius: 20px;
+    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
+    text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+    border: none;
+    outline: none;
+}
+.session-profile{
+    width: 3em;
+    height: 3em;
+    position: absolute;
+    margin-top: -7px;
+    margin-left: -94px;
+    margin-right: 0px;
+    background-color: aliceblue;
+    border-radius: 50%;
+}
