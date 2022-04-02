@@ -29,6 +29,12 @@ input:focus {
   box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
   text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
 }
+.login:hover{
+  cursor: pointer;
+}
+.login:hover .session-profile{
+   
+}
 .navbar {
   position: sticky;
   align-self: flex-start;
@@ -246,8 +252,9 @@ li.menu-item {
 	border-radius: 50px;
 }
 .copy-button:hover{
-    color: #4776e6;
-    background: white;
+  color: #4776e6;
+  background: white;
+  cursor: pointer;
 	background-color: white;
 	transform: scale(1.1);
 	border: 5px solid #4776e6;
@@ -280,6 +287,7 @@ li.menu-item {
 }
 .edit-delete:hover {
   background: #818181;
+  cursor: pointer;
 }
 .tooltip {
   position: absolute;

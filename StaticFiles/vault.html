@@ -48,7 +48,10 @@
                 <input class="search" type="textbox" placeholder="Search my Vault">
             </div>
             <div class="acco">
-                <a href=""><button class="login"><img class="session-profile" src="../Images/GoogleLogo.png">ay716976@gmail.com</button></a>
+                <div class="profile-picture">
+                    <img class="session-profile" src="../Images/GoogleLogo.png">
+                </div>
+                <a href=""><button class="login" id="logout-button" onmouseover="changeText('LOGOUT')" onmouseout="defaultText()" >ay716976@gmail.com<!--dont forget to change defaultText JS function below-->></button></a>
             </div>
         </div> 
         <div class="content" id="passwords" style="visibility: visible;">
@@ -115,7 +118,7 @@
                 </div>
                 <div class="grid-item">
                     <div class="image">
-                        <img class="test" src="/../Images/GoogleLogo.png" width="100%" height="100%">
+                        <img class="test" src="../Images/GoogleLogo.png" width="100%" height="100%">
                     </div>
                     <button class="copy-button">COPY PASSWORD</button>
                     <div class="label">
@@ -139,6 +142,19 @@
         }
         function show(element){
             document.getElementById(element).style.visibility = "visible";
+        }
+        function changeText(text)
+        {
+            var display = document.getElementById('logout-button');
+            display.innerHTML = "";
+            display.innerHTML = text;
+        }
+              
+        function defaultText()
+        {
+            var display = document.getElementById('logout-button');
+            display.innerHTML = "";
+            display.innerHTML = "ay716976@gmail.com";
         }
         function delete_object(){
             //Delete data from mongoDB
