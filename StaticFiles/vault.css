@@ -32,9 +32,6 @@ input:focus {
 .login:hover{
   cursor: pointer;
 }
-.login:hover .session-profile{
-   
-}
 .navbar {
   position: sticky;
   align-self: flex-start;
@@ -86,7 +83,7 @@ input {
   width: 4em;
   height: 4em;
   position: absolute;
-  margin-top: -15px;
+  margin-top: -4px;
   margin-left: -103px;
   margin-right: 0px;
   background-color: aliceblue;
