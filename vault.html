@@ -9,34 +9,34 @@
     <title>Vault</title>
 </head>
 <body>
-    <div id="mySidebar"class="sidebar">
-        <ul class="ul-list">
+    <div class="sidebar" id="mySidebar">
+        <ul class="ul-list" id="ul-list">
             <button id = "openbtn" class="openbtn" onclick="openNav()"><img src="Images/ellipsis-solid.svg"></button>
             <a href="javascript:void(0)" id="closebtn" class="closebtn" onclick="closeNav()">×</a>
-            <div class="tab">
-                <li><img src="Images/lock-solid.svg"></li>
-                <p id="list-text-1">Passwords</p>
-            </div>
-            <div class="tab">
-                <li><img src="Images/note-sticky-solid.svg"></li>
-                <p id="list-text-2">Notes</p>
-            </div>
-            <div class="tab">
-                <li><img src="Images/address-book-solid.svg"></li>
-                <p id="list-text-3">Addresses</p>
-            </div>
-            <div class="tab">
-                <li><img src="Images/credit-card-solid.svg"></li>
-                <p id="list-text-4">Credit cards</p>
-            </div>
-            <div class="tab">
-                <li><img src="Images/building-columns-solid.svg"></li>
-                <p id="list-text-5">Bank accounts</p>
-            </div>
-            <div class="tab">
-                <li style="margin-top: 178px;"><img src="Images/gear-solid.svg"></li>
-                <p  style="margin-top: 190px;" id="list-text-6">Settings</p>
-            </div>
+            <button class="tab" id = "tab" onclick="fetch()">
+                <li><img src="Images/lock-solid.svg" class="list-img"></li>
+                <span class="text" id = "list-text-1">Passwords</span>
+            </button>
+            <button class="tab" onclick="show(notes)">
+                <li><img src="Images/note-sticky-solid.svg" class="list-img"></li>
+                <span class="text" id="list-text-2">Notes</span>
+            </button>
+            <button class="tab" onclick="show()">
+                <li><img src="Images/address-book-solid.svg" class="list-img"></li>
+                <span class="text" id="list-text-3">Addresses</span>
+            </button>
+            <button class="tab" onclick="show()">
+                <li><img src="Images/credit-card-solid.svg" class="list-img"></li>
+                <span class="text" id="list-text-4">Credit cards</span>
+            </button>
+            <button class="tab" onclick="show()">
+                <li><img src="Images/building-columns-solid.svg" class="list-img"></li>
+                <span class="text" id="list-text-5">Bank accounts</span>
+            </button>
+            <button class="tab" style="margin-top: 178px;height: 50px;" onclick="show()">
+                <li><img src="Images/gear-solid.svg" class="list-img"></li>
+                <span class="text" id="list-text-6">Settings</span>
+            </button>
         </ul>
     </div>
     <div class="main" id="main">
@@ -48,61 +48,129 @@
                 <input class="search" type="textbox" placeholder="Search my Vault">
             </div>
             <div class="acco">
-                <a href=""><button class="login"><img class="session-profile" src="">Name</button></a>
+                <a href=""><button class="login"><img class="session-profile" src="Images/GoogleLogo.png">ay716976@gmail.com</button></a>
             </div>
-        </div>  
-        <div class="content">
-            <div class="grid-item">1</div>
-            <div class="grid-item">2</div>
-            <div class="grid-item">3</div>
-            <div class="grid-item">4</div>
-            <div class="grid-item">5</div>
-            <div class="grid-item">6</div>
-            <div class="grid-item">7</div>
-            <div class="grid-item">8</div>
-            <div class="grid-item">9</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-            <div class="grid-item">10</div>
-        </div>
+        </div> 
+        <div class="content" id="passwords" style="visibility: visible;">
+            <!-- Fetch different data depending on sidebar button click-->  
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
+                <div class="grid-item">
+                    <div class="image">
+                        <img class="test" src="Images/GoogleLogo.png" width="100%" height="100%">
+                    </div>
+                    <button class="copy-button">COPY PASSWORD</button>
+                    <div class="label">
+                        <b class="header">Google</b>
+                        <p class="name">Username</p>
+                        <div class="tooltip"><button class = "edit-delete" onclick="edit_object()"><img src="Images/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                        <div class="tooltip"><button class = "edit-delete" onclick="delete_object()" style="margin-left: 240px;"><img src="Images/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                    </div>
+                </div>
     </div>
-      
       <script>
         function openNav() {
             document.getElementById("mySidebar").style.width = "250px";
             document.getElementById("main").style.marginLeft = "250px";
             document.getElementById("openbtn").style.visibility = "hidden";
             document.getElementById("closebtn").style.visibility = "visible";
-            document.getElementById("list-text-1").style.visibility = "visible";
-            document.getElementById("list-text-2").style.visibility = "visible";
-            document.getElementById("list-text-3").style.visibility = "visible";
-            document.getElementById("list-text-4").style.visibility = "visible";
-            document.getElementById("list-text-5").style.visibility = "visible";
-            document.getElementById("list-text-6").style.visibility = "visible";
+            for (let el of document.querySelectorAll('.text')){
+                el.style.visibility = "visible";
+                el.className = 'classname';
+            }
         }
-        
+        function show(element){
+            document.getElementById(element).style.visibility = "visible";
+        }
+        function delete_object(){
+            //Delete data from mongoDB
+
+        }
+        function edit_object() {
+            window.open("edit.html","_self");
+        }
+        function replaceButtonText(buttonId, text){
+            if (document.getElementById){
+                var button=document.getElementById(buttonId);
+                if (button){
+                    if (button.childNodes[0]){
+                        button.childNodes[0].nodeValue=text;
+                    }
+                    else if (button.value){
+                        button.value=text;
+                    }
+                    else //if (button.innerHTML)
+                        button.innerHTML=text;
+                }
+            }
+        }
         function closeNav() {
             document.getElementById("mySidebar").style.width = "80px";
             document.getElementById("main").style.marginLeft= "0";
             document.getElementById("openbtn").style.visibility = "visible";
             document.getElementById("closebtn").style.visibility = "hidden";
-            document.getElementById("list-text-1").style.visibility = "hidden";
-            document.getElementById("list-text-2").style.visibility = "hidden";
-            document.getElementById("list-text-3").style.visibility = "hidden";
-            document.getElementById("list-text-4").style.visibility = "hidden";
-            document.getElementById("list-text-5").style.visibility = "hidden";
-            document.getElementById("list-text-6").style.visibility = "hidden";
+            for (let el of document.querySelectorAll('span')) {
+                el.style.visibility = 'hidden';
+                el.className = 'text';
+            }
         }
       </script>
 </body>
