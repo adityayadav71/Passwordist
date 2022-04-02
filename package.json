@@ -1,0 +1,22 @@
+{
+  "name": "passwordist",
+  "version": "1.0.0",
+  "description": "A Password Management Web Application that stores, generates and manages passwords for its users. \r https://adityayadav71.github.io/Passwordist/",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adityayadav71/Passwordist.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adityayadav71/Passwordist/issues"
+  },
+  "homepage": "https://github.com/adityayadav71/Passwordist#readme",
+  "dependencies": {
+    "mongoose": "^6.2.9"
+  }
+}
