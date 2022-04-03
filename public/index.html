@@ -4,24 +4,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="home.css">
-    <link rel = "icon" href = "../Images/LOGO.ico" type = "image/x-icon"> 
+    <link rel = "icon" href = "./Images/LOGO.ico" type = "image/x-icon"> 
     <title>Passwordist</title>
 </head>
 <body>
     <navbar style="margin-left: 10px;">
-        <a href="index.html"><img class="logo"src="../Images/LOGO.png" alt="Logo"></a>
+        <a href="index.html"><img class="logo"src="./Images/LOGO.png" alt="Logo"></a>
         <ul class="navbarlist">
             <li class="dropdown dropdown-2">
                 SERVICES
                 <ul class="dropdown_menu dropdown_menu-2">
                   <li class="dropdown_item-1">Generate Password</li>
-                  <li class="dropdown_item-2">Item 2</li>
-                  <li class="dropdown_item-3">Item 3</li>
-                  <li class="dropdown_item-4">Item 4</li>
-                  <li class="dropdown_item-5">Item 5</li>
                 </ul>
               </li>
-           <li class="list" style="margin-left: 100px;"><a href="">Hello, Name</a></li>
+           <li class="list" style="margin-left: 100px;"><a onclick="reveal()"href="#features">Features</a></li>
            <li class="list"><a href="">CONTACT US</a></li>
            <li class="list"><a href="">INFO</a></li> 
         </ul>
@@ -37,36 +33,36 @@
         </ul>
     </div>
       
-    <object data="../Images/HomeImage1.svg" class="HomeImage" margin-top="-10px" width="500" height="500"> </object>
-    <p style="margin-left: 8%; font-size: 16px; font-weight: 570;">Tired of forgetting and resetting your passwords?<br>
+    <object data="./Images/HomeImage1.svg" class="HomeImage" margin-top="-10px" width="500" height="500"> </object>
+    <p id="features" style="margin-left: 8%; font-size: 16px; font-weight: 570;">Tired of forgetting and resetting your passwords?<br>
         No worries, we got your back!</p>
     <div class="formbg" id="signupborder">
         <div style="justify-content: center;" class="formheader"><p style="margin-top: 10px;">SIGN UP</p></div>
-        <form action="" method="get">
-            <input type="text" class="textbox" placeholder="Email" name="email"><br><br>
-            <input type="text" class="textbox" style="top: 40%;" placeholder="Password" name="password"><br><br>
+        <form action="/sign_up" method="post">
+            <input type="text" class="textbox" id="username" placeholder="Username" name="username"><br><br>
+            <input type="text" class="textbox"  id="email" style="top: 40%;" placeholder="Email" name="email"><br><br>
             <input type="submit" class="SIGNUP" id="submit" value="SIGN UP" onclick=""><br><br>
             <input type="submit" class="google" id="submit" value="Sign up with Google" onclick="">
-            <a href=" "><img src="../Images/GoogleLogo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; top: 81%; z-index: 10;"></a>
+            <a href=" "><img src="./Images/GoogleLogo.png" style="position: absolute; width: 4em; height: 2em; margin-left: 18%; top: 81%; z-index: 10;"></a>
         </form>
     </div>
-    <div class="contain reveal">
-    <div class="container">
-        <img  class="featimg" src="../Images/HomeImage2.jpg" alt="">
+    <div class="contain reveal" >
+    <div class="container" >
+        <img  class="featimg" src="./Images/HomeImage2.jpg" alt="">
         <h1 class="feat-title">Say Goodbye to Password Fuss</h1>
         <p class="feat-words">Passwordist helps manage all your passwords so you won’t have to. Sign in with your master password to access passwords to all your accounts be it digital or not.</p>
         </div>
     </div>
     <div class="contain reveal">
     <div class="container-2">
-        <img class="featimgright" src="../Images/HomeImage3.jpg" alt="">
+        <img class="featimgright" src="./Images/HomeImage3.jpg" alt="">
         <h1 class="feat-title-left">Keep your Data Secure</h1>
         <p class="feat-words-left">Easily create unique, complex passwords for all your logins and keep them locked securely in our encrypted vault.</p>  
     </div>
     </div>
     <div class="contain reveal">
     <div class="container">
-        <img  class="featimg" src="../Images/HomeImage2.jpg" alt="">
+        <img  class="featimg" src="./Images/HomeImage2.jpg" alt="">
         <h1 class="feat-title">Categorize your passwords</h1>
         <p class="feat-words">Too many passwords? Create categories to organize your passwords for faster access.</p>
     </div>
@@ -78,53 +74,59 @@
             <h3 style="color: rgba(0, 0, 0, 0.6); font-size: 17.86px;">Click below to simplify your digitial life for free </h3>
         </div>
         <button class="bottomsignup" onclick = "scrollToTop()">SIGN UP</button>
-        <script>
-            function scrollToTop(){
-                window.scrollTo({top: 0, behavior: 'smooth'});
-                element = document.getElementById('signupborder');
-                let defaultBG = element.style.boxShadow;
-                let defaultTransition =  "all 1s ease-in-out";
-
-                element.style.transition = "all 1s ease-in-out";
-                element.style.boxShadow = "7.44255px 14.8851px 65.4944px 22.3276px rgba(22, 63, 175, 0.7)";
-
-                setTimeout(function()
-                {
-                    element.style.boxShadow = defaultBG;
-                    setTimeout(function() {
-                        element.style.transition =  defaultTransition;
-                    }, 1500);
-                }, 1500);
-            }
-            function reveal() {
-                var reveals = document.querySelectorAll(".reveal");
-
-                for (var i = 0; i < reveals.length; i++) {
-                    var windowHeight = window.innerHeight;
-                    var elementTop = reveals[i].getBoundingClientRect().top;
-                    var elementVisible = 150;
-
-                    if (elementTop < windowHeight - elementVisible) {
-                    reveals[i].classList.add("active");
-                    } else {
-                    reveals[i].classList.remove("active");
-                    }
-                }
-                }
-            window.addEventListener("scroll", reveal);
-        </script>
         <div class="bottomlinks">
             <div style="display: flex;">
-                <img style = "width: 20px; height: 20px; margin-right: 10px;"src="../Images/InstagramLogo.svg">
+                <img style = "width: 20px; height: 20px; margin-right: 10px;"src="./Images/InstagramLogo.svg">
                 <a style="margin-right: 10px;" href="">Instagram</a>
             </div>
             <div style="display: flex;">
-                <img style = "width: 20px; height: 20px; margin-right: 10px;"src="../Images/TwitterLogo.png">
+                <img style = "width: 20px; height: 20px; margin-right: 10px;"src="./Images/TwitterLogo.png">
                 <a style="margin-right: 20px;" href="">Twitter</a>
             </div>
                 <a style="margin-right: 10px;" href="">FAQ</a>
         </div>
     </div>
+<script>
+    function scrollToTop(){
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            element = document.getElementById('signupborder');
+            let defaultBG = element.style.boxShadow;
+            let defaultTransition =  "all 1s ease-in-out";
+
+            element.style.transition = "all 1s ease-in-out";
+            element.style.boxShadow = "7.44255px 14.8851px 65.4944px 22.3276px rgba(22, 63, 175, 0.7)";
+
+            setTimeout(function()
+            {
+                element.style.boxShadow = defaultBG;
+                setTimeout(function() {
+                    element.style.transition =  defaultTransition;
+                }, 1500);
+            }, 1500);
+        }
+    function smoothscroll(element){
+            element.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start' // scroll to top of target element
+            })
+        }
+    function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                reveals[i].classList.add("active");
+                } else {
+                reveals[i].classList.remove("active");
+                }
+            }
+        }
+    window.addEventListener("scroll", reveal);
+</script>
 </div>
 </body>
 </html>

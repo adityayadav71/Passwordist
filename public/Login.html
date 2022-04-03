@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel = "icon" href = "../Images/LOGO.ico" type = "image/x-icon">
-    <title>Create Master Password</title>
+    <link rel = "icon" href = "./Images/LOGO.ico" type = "image/x-icon">
+    <title>Login</title>
 </head>
 <body>
     <style>
@@ -21,6 +21,19 @@
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
+        }
+        body{
+            animation: fadeInAnimation ease 0.5s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+        }
+        @keyframes fadeInAnimation {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
         }
         .logo {
             display: block;
@@ -38,29 +51,14 @@
         .container{
             display: flex;
             height: fit-content;
-            margin-top: 5%;
+            margin-top: 2%;
         }
         .head-text{
-            margin-top: 5%;
             margin-left: 5%;
             padding-right: 10%;
             font-weight: 400;
-            font-size: 48px;
+            font-size: 36px;
             line-height: 76px;
-        }
-        .sub-text{
-            position: relative;
-            margin-left: 5%;
-            font-weight: 400;
-            font-size: 20px;
-            line-height: 36px;
-        }
-        .homeimage{
-            position: relative;
-            width: 40%;
-            height: 40%;
-            margin-top: 5%;
-            margin-right: 5%;
         }
         .text{
             position: relative;
@@ -71,7 +69,8 @@
         }
         .form{
             position: relative;
-            width: 50%;
+            right: -141px;
+            width: fit-content;
             top: 7%;
         }
         .textbox{
@@ -94,7 +93,7 @@
             width: 45%;
             height: 10%;
             left: 28%;
-            top: 80%;
+            top: 65%;
             border: none;
             outline: none;
             background: #5D5FEF;
@@ -112,9 +111,10 @@
             background-color: #FFFFFF;
             box-shadow: 7.44255px 14.8851px 65.4944px 22.3276px rgba(0, 0, 0, 0.1);
             border-radius: 7.44255px;
-            margin-right: 0px;
-            width: 70%;
-            height: 100%;
+            margin-left: 8%;
+            margin-top: 10%;
+            width: 25%;
+            height: 60%;
         }
         .formheader{
             position: absolute;
@@ -129,35 +129,30 @@
             text-align: center;
             color: #FFFFFF;
         }
-        .strength{
-            margin-top: 27%;
-            width: 73%;
-            height: 10%;
-            margin-left: 15%;
-            stroke: transparent;
-            stroke-width: 0px;
+        .forgot{
+            position: absolute;
+            left: 75px;
+            top: 80%;
+            text-decoration: none;
+            font-size: small;    
         }
     </style>
     <div class="navbar">
-        <a href="index.html"><img class="logo" src="../Images/LOGO.png" alt="Logo"></a>
+        <a href="index.html"><img class="logo" src="./Images/LOGO.png" alt="Logo"></a>
     </div>
     <div class="container">
-        <div class="text">
-            <h1 class="head-text">Hii, James!<br>Let's create your master password</h1>
-            <h3 class="sub-text">Make sure it is something you can remember easily and also strong enough on the strength meter. You will use this to login to your vault.</h3>
-        </div>
-        <div class="form">
+            <h1 class="head-text">LOGIN TO YOUR VAULT</h1>
             <div class="formbg" id="signupborder">
-                <div style="justify-content: center;" class="formheader"><p style="margin-top: 10px;">Create Master Password</p></div>
-            <form action="" method="get">
-                <input type="text" class="textbox" placeholder="Master Password " name="email"><br><br>
-                <svg class="strength">
-                    <rect width="300" height="10%" style="fill: rgba(196, 196, 196, 0.33)" />
-                </svg>
-                <input type="text" class="textbox" style="top: 50%;" placeholder="Confirm Master Password" name="password"><br><br>
-                <input type="submit" class="SIGNUP" id="submit" value="CREATE" onclick="">
-            </form>
+                <div class="formheader"><p style="margin-top: 10px;">LOGIN</p></div>
+                <form action="/login" method="post">
+                    <input type="text" class="textbox" placeholder="Email" name="email"><br><br>
+                    <input type="password" class="textbox" style="top: 40%;" placeholder="Master Password" name="password"><br><br>
+                    <input type="submit" class="SIGNUP" id="submit" value="LOGIN">
+                </form>
+                <a class="forgot" href="" >Forgot your Master Password?</a>
             </div>
+        <div class="form">
+            <img src="./Images/VAULT.png">
         </div>
     </div>
 </body>

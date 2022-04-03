@@ -233,16 +233,16 @@ li.menu-item {
     margin-bottom: 30px;
 }
 .copy-button{
-    display: none;
-    margin-top: 20px;
-    margin-left: 10%;
-    border-radius: 10px;
-    border: none;
-    width: 80%;
-    height: 30%;
-    z-index: 10;
-    font-size: large;
-    color: white;
+  display: none;
+  margin-top: 20px;
+  margin-left: 10%;
+  border-radius: 10px;
+  border: none;
+  width: 80%;
+  height: 30%;
+  z-index: 10;
+  font-size: large;
+  color: white;
 	background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
 	border: 5px solid transparent;
 	transition: .3s ease;
