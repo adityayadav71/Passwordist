@@ -1,39 +1,47 @@
 var express = require("express")
+const path = require("path")
 var bodyParser = require("body-parser")
 var mongoose = require("mongoose")
-var nodemailer = require('nodemailer');
-const cookieParser = require("cookie-parser");
-
+var nodemailer = require("nodemailer");
+var session = require("express-session");
+var bcrypt = require("bcryptjs");
+const User = require("./models/User");
+const MongoDBSession = require("connect-mongodb-session")(session);
+// const cookieParser = require("cookie-parser");
 const app = express()
+app.use('/', express.static(path.join(__dirname, 'public')))
+app.use(bodyParser.json());
+
+const mongoURI = "mongodb://localhost:27017/user";
+
+mongoose.connect(mongoURI,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+}).then((res) => {
+    console.log("Connected to Database");
+});
+
+var store = new MongoDBSession({
+    uri: mongoURI,
+    collection: 'mySessions',
+})
 
 const oneDay = 1000 * 60 * 60 * 24;
-app.use(function (req, res, next) {
-    // check if client sent cookie
-    var cookie = req.cookies.cookieName;
-    if (cookie === undefined) {
-      // no: set a new cookie
-      var randomNumber=Math.random().toString();
-      randomNumber=randomNumber.substring(2,randomNumber.length);
-      res.cookie('cookieName',randomNumber, { maxAge: oneDay, httpOnly: true });
-      console.log('cookie created successfully');
-    } else {
-      // yes, cookie was already present 
-      console.log('cookie exists', cookie);
-    } 
-    next(); 
-});
+app.use(
+    session({
+        secret: "This is a secret keyempok21-O(@!)E(Ni3n209Jnoi@jR0I2HD",
+        resave: false,
+        saveUninitialized: false,
+        store: store,
+    })
+)
 
 
 
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
-app.use(cookieParser());
-mongoose.connect('mongodb://localhost:27017/user',{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
-
+const fixed = 0;
+var db = mongoose.connection;
+var data;
+var __dirname = 'public';
 function between(min, max) {  
     return Math.floor(
       Math.random() * (max - min + 1) + min
@@ -44,23 +52,26 @@ function strcmp(a, b){
     return (a<b?-1:(a>b?1:0));  
 }
 
-const fixed = 0;
-var db = mongoose.connection
-var data;
 
-db.on('error',()=>console.log("Error in Connecting to Database"));
-db.once('open',()=>console.log("Connected to Database"))
-
-app.get("/",(req,res)=>{
-    if(req.query)
-    res.set({
-        "Allow-access-Allow-Origin": '*'
-    })
-    return res.redirect('index.html');
+app.get('/', function(req, res) {
+    req.session.isAuth = true,
+    res.sendFile(path.join('public/index.html', {root: __dirname}).toString());
 }).listen(3000);
 
-app.post("/sign_up",(req,res)=>{
-    sess = req.session;
+app.post("/register", async(req,res)=>{
+    console.log(req.body)
+    const { username, email } = req.body
+
+    try{
+        await User.create({
+            username, 
+            password
+        })
+        console.log('User created successfully: ', response)
+    }catch(error){
+        console.log(error)
+        return res.json({ status: 'error'})
+    }
     var username = req.body.username;
     var email = req.body.email;
     console.log(req.body);
@@ -105,7 +116,7 @@ app.post("/sign_up",(req,res)=>{
     };
 })
 
-app.post("/validate",(req,res)=>{
+app.post("/validateotp",(req,res)=>{
     var one = req.body.first;
     var two = req.body.second;
     var three = req.body.third;
@@ -119,7 +130,7 @@ app.post("/validate",(req,res)=>{
             if(err){
                 throw err;
             }
-            console.log("Record Inserted Successfully");
+            console.log("OTP verified Successfully");
         });
         return res.redirect('MasterPassword.html')
     }else {
@@ -127,7 +138,6 @@ app.post("/validate",(req,res)=>{
     }
 })
 app.post("/set_master_password", (req, res)=>{
-    sess = req.session;
     var pass = req.body.master;
     var cpass = req.body.confirmpass;
     if(strcmp(pass, cpass) == 0){
@@ -143,10 +153,7 @@ app.post("/set_master_password", (req, res)=>{
     }
 });
 
-app.post('/login',(req,res) => {
-    sess = req.session;
-    var views = req.session.views++;
-    console.log(views);
+app.post('/auth',(req,res) => {
     var email = req.body.email;
     var password = req.body.password;
     data={
@@ -163,7 +170,6 @@ app.post('/login',(req,res) => {
     });
 });
 app.post('/logout',(req,res) => {
-    req.session.destroy(function() {});
     return res.redirect("/vault.html");
 });
 

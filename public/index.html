@@ -38,7 +38,7 @@
         No worries, we got your back!</p>
     <div class="formbg" id="signupborder">
         <div style="justify-content: center;" class="formheader"><p style="margin-top: 10px;">SIGN UP</p></div>
-        <form action="/sign_up" method="post">
+        <form id="reg-form">
             <input type="text" class="textbox" id="username" placeholder="Username" name="username"><br><br>
             <input type="text" class="textbox"  id="email" style="top: 40%;" placeholder="Email" name="email"><br><br>
             <input type="submit" class="SIGNUP" id="submit" value="SIGN UP" onclick=""><br><br>
@@ -126,6 +126,26 @@
             }
         }
     window.addEventListener("scroll", reveal);
+    const form = document.getElementById('reg-form')
+    form.addEventListener('submit', registerUser)
+        
+    async function registerUser(event){
+        event.preveentDefault()
+        const username = document.getElementById('username')
+        const email = document.getElementById('email')
+
+        const result = await fetch('/register',{
+                method: 'POST',
+                headers: {
+                    'Content-Type': application/json
+                },
+                body: JSON.stringify({
+                    username,
+                    password
+                }).then((res) => res.json())
+        })
+        console.log(result)
+    }
 </script>
 </div>
 </body>
