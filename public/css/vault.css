@@ -14,20 +14,23 @@ input:focus {
 }
 .login {
   position: relative;
-  flex: 0 25%;
-  width: 100%;
-  height: 100%;
-  color: #ffffff;
-  font-weight: 550;
-  margin-top: 5px;
-  font-size: 16px;
-  line-height: 33px;
-  border: none;
-  outline: none;
-  background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
-  border-radius: 29.7702px;
-  box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
-  text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+    flex: 0 25%;
+    width: fit-content;
+    height: 50px;
+    color: #ffffff;
+    padding-left: 43px;
+    padding-right: 43px;
+    margin-right: 43px;
+    font-weight: 550;
+    margin-top: 5px;
+    font-size: 16px;
+    line-height: 33px;
+    border: none;
+    outline: none;
+    background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
+    border-radius: 29.7702px;
+    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
+    text-shadow: 0px 2.97702px 2.97702px rgb(0 0 0 / 25%);
 }
 .login:hover{
   cursor: pointer;
@@ -36,7 +39,7 @@ input:focus {
   position: sticky;
   align-self: flex-start;
   top: 3px;
-  overflow-y: auto;
+  overflow-y: hidden;
   display: flex;
   height: 100px;
   padding-top: 10px;
@@ -48,7 +51,7 @@ input:focus {
 }
 .logo {
   position: relative;
-  width: 50%;
+  width: 3vw;
   height: 100%;
   z-index: 1;
 }
@@ -79,23 +82,11 @@ input {
   border: none;
   outline: none;
 }
-.session-profile {
-  width: 4em;
-  height: 4em;
-  position: absolute;
-  margin-top: -4px;
-  margin-left: -103px;
-  margin-right: 0px;
-  background-color: aliceblue;
-  border-radius: 50%;
-  border: 3px solid #4776e6;
-}
 .sidebar {
   position: fixed;
   margin: 1% 0% 0% 2%;
   height: 95%;
   width: 80px;
-  position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
@@ -146,13 +137,62 @@ input {
 .sidebar .openbtn:hover {
   cursor: pointer;
 }
+.addcard{
+  position: fixed;
+  align-items: center;
+  padding: 10px;
+  bottom: 10px;
+  right: 10px; 
+  width: 70px;
+  z-index: 100;
+  height: 70px;
+  border: none;
+  outline: 2px solid #5d5fef;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
+}
+.addcard:hover{
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.addform{
+  position: fixed;
+    display: none;
+    width: 80vw;
+    height: 43vw;
+    left: 144px;
+    margin-top: 3%;
+    top: 10px;
+    border: none;
+    outline: 1px solid #4776e6;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 100;
+}
+.form{
+  background-color: lightgray;
+}
+.save-buttons{
+  position: fixed;
+  display: none;
+  top: 4%;
+  bottom: 0;
+  left: 88%;
+  width: 80%;
+  height: 10%;
+  z-index: 100;
+}  
+button:hover{
+  cursor: pointer;
+}
 #main {
   transition: margin-left 0.5s;
   padding: 0px 0px 16px 16px;
 }
 .ul-list {
   padding: 5px 5px;
-  margin-top: -9px;
+  margin-top: -16px;
   list-style-type: none;
 }
 .tab {
@@ -194,20 +234,38 @@ li.menu-item {
   margin: 0 0 20px 0;
 }
 .content {
-  display: grid;
+  display: flex;
   grid-template-columns: auto auto auto;
-  padding: 10px;
-  margin-left: 10%;
+  margin-top: -73px;
+  z-index: 1;
+  padding-left: 11%;
   transition: margin-left 0.5s;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.grid{
+  display: block;
+  position: relative;
+  background-color: rgba(255, 255, 255, 0.8);  
+  box-shadow: 0px 0px 2px 0px rgb(61, 61, 61);
+  width: 28%;
+  margin: 2%;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 20px;
 }
 .grid-item {
-  background-color: rgba(255, 255, 255, 0.8);
-  margin: 10px;
-  border-radius: 20px;
-  font-size: 30px;
-  height: 200px;
-  box-shadow: 0px 0px 2px 0px rgb(61, 61, 61);
-  text-align: center;
+  display: flex;
+  position: relative;
+}
+.grid-item2 {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2%;
 }
 .list-img {
   position: fixed;
@@ -217,30 +275,46 @@ li.menu-item {
   margin-left: 14px;
 }
 .image {
-  height: 65%;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.grid-item:hover .image{
+.grid:hover .image{
     z-index: -1;
+    cursor: pointer;
     transition: 0.5s ease-in;
     background: #b7a4f1;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
 }
-.grid-item:hover .copy-button{
-    display: block;
-    margin-top: -90px;
-    margin-bottom: 30px;
+.grid:hover{
+  cursor: pointer;
+}
+.grid:hover .copy-button{
+    display: flex;
+    position: absolute;
+    margin-top: 18%;
+    z-index: 1;
+    cursor: pointer;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+    -moz-animation: fadeIn 1s;
+    -o-animation: fadeIn 1s;
+    -ms-animation: fadeIn 1s;
+}
+@keyframes fadeIn {
+  0% {opacity:0;}
+  100% {opacity:1;}
 }
 .copy-button{
   display: none;
-  margin-top: 20px;
-  margin-left: 10%;
+  justify-content: center;
   border-radius: 10px;
+  align-items: center;
+  margin-left: 10%;
   border: none;
   width: 80%;
-  height: 30%;
-  z-index: 10;
+  height: 35%;
   font-size: large;
   color: white;
 	background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
@@ -257,8 +331,14 @@ li.menu-item {
 	border: 5px solid #4776e6;
 }
 .label {
-  display: table;
-  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.label2 {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 .header {
   position: relative;
@@ -268,17 +348,15 @@ li.menu-item {
 .name {
   position: relative;
   font-size: 15px;
-  margin-left: 15px;
+  margin-left: 10px;
 }
 .edit-delete {
-  position: absolute;
-  margin-top: -46px;
+  position: relative;
   border-radius: 30%;
   background: #81818180;
   padding: 8px;
   outline: none;
   border: none;
-  margin-left: 178px;
   width: 32px;
   height: 32px;
 }
@@ -287,8 +365,7 @@ li.menu-item {
   cursor: pointer;
 }
 .tooltip {
-  position: absolute;
-  display: inline-block;
+  padding: 2px;
 }
 
 .tooltip .tooltiptext {

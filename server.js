@@ -1,176 +1,328 @@
-var express = require("express")
-const path = require("path")
-var bodyParser = require("body-parser")
-var mongoose = require("mongoose")
-var nodemailer = require("nodemailer");
-var session = require("express-session");
-var bcrypt = require("bcryptjs");
-const User = require("./models/User");
-const MongoDBSession = require("connect-mongodb-session")(session);
-// const cookieParser = require("cookie-parser");
-const app = express()
-app.use('/', express.static(path.join(__dirname, 'public')))
-app.use(bodyParser.json());
+const express = require('express')
+const session = require('express-session')
+const nodemailer = require('nodemailer')
+const ejs = require('ejs')
+const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
+const MongoStore = require('connect-mongo')
+const User = require('./models/User')
+const Notes = require('./models/Notes')
+const Cards = require('./models/Cards')
+const Passwords = require('./models/Passwords')
 
-const mongoURI = "mongodb://localhost:27017/user";
+const app = express()
+
+const mongoURI = "mongodb://localhost:27017/users"
 
 mongoose.connect(mongoURI,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then((res) => {
-    console.log("Connected to Database");
-});
-
-var store = new MongoDBSession({
-    uri: mongoURI,
-    collection: 'mySessions',
 })
 
-const oneDay = 1000 * 60 * 60 * 24;
-app.use(
-    session({
-        secret: "This is a secret keyempok21-O(@!)E(Ni3n209Jnoi@jR0I2HD",
-        resave: false,
-        saveUninitialized: false,
-        store: store,
+const store = MongoStore.create({
+    mongoUrl: mongoURI,
+    collectionName: 'sessions'
+}) 
+app.set('trust proxy', 1)
+app.set('view-engine', ejs)
+app.use(session({ 
+    secret: 'g8&*&^gv087go8yg8o7gs087BUBo8yVY*&VOUV&^FWVD)yubOW#@*&Bhb',
+    saveUninitialized: false,
+    resave: false,
+    store: store,
+    cookie: { 
+        httpOnly: true,
+        secure: false,
+        maxAge: 1000 * 24 * 60 * 60
+    }
+}))
+app.use(express.urlencoded({ extended: false}))
+app.use(express.static('public'))
+
+const authenticateUser = (req, res, next) =>{
+    if(req.session.loggedin === undefined || req.session.loggedin === "undefined"){
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }else{
+        next()
+    }
+}
+
+
+app.get('/', (req, res, next) =>{
+    if(req.session.loggedin === "false" || req.session.loggedin === undefined || req.session.loggedin === "undefined"){
+        req.session.loggedin = "undefined"
+        res.render(__dirname + '/views/pages/index.ejs', {
+            message: "", username: req.session.username, loggedin: "false", title: 'Error!', icon: 'error', confirmButtonText: 'Try again' 
+        })
+    }else{
+        req.session.lastaccessed = Date.now()
+        res.render(__dirname + '/views/pages/index.ejs', {
+            message: "", username: req.session.username, loggedin: "true", title: 'Error!', icon: 'error', confirmButtonText: 'Try again' 
+        })
+    }
+    next()
+})
+
+app.get('/login', authenticateUser, async (req,res) =>{
+    if(req.session !== undefined){ 
+        res.render(__dirname + '/views/pages/vault.ejs', {
+            email: req.session.email
+        })
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
+
+app.get('/masterpassword', authenticateUser, (req,res) =>{
+    if(req.session){
+        res.render(__dirname + '/views/pages/MasterPassword.ejs', {
+            username: req.session.id, message: "", title: "", icon: "", confirmButtonText: ""
+        })
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: ""
+        })
+    }
+})
+
+app.get('/generatepassword', (req, res) =>{
+    res.render(__dirname + '/views/pages/generate_password.ejs')
+})
+
+app.get('/vault', authenticateUser, (req,res) =>{ // user should be authenticated before they can access the vault
+    res.render(__dirname + '/views/pages/vault.ejs', {
+        email: req.session.email
     })
-)
+})
 
+app.get('/passwords', (req, res) =>{
+    res.render(__dirname + '/views/partials/_passwords.ejs'), {
+        message: "", title: "", icon: "", confirmButtonText: ""
+    }
+})
 
+app.get('/notes', (req, res) =>{
+    res.render(__dirname + '/views/partials/_notes.ejs', {
+        message: "", title: "", icon: "", confirmButtonText: "", saved: false
+    })
+})
 
-const fixed = 0;
-var db = mongoose.connection;
-var data;
-var __dirname = 'public';
+app.get('/addresses', (req, res) =>{
+    res.render(__dirname + '/views/partials/_addresses.ejs'), {
+        message: "", title: "", icon: "", confirmButtonText: ""
+    }
+})
+
+app.get('/cards', (req, res) =>{
+    res.render(__dirname + '/views/partials/_cards.ejs',{
+        message: "", title: "", icon: "", confirmButtonText: "", saved: false
+    })
+})
+
+app.get('/accounts', (req, res) =>{
+    res.render(__dirname + '/views/partials/_accounts.ejs'), {
+        message: "", title: "", icon: "", confirmButtonText: ""
+    }
+})
+
+app.get('/getmypass', async (req, res) =>{
+    var userpasswords = []
+    if(req.session.loggedin === "true"){
+        userpasswords = await Passwords.findOne({})
+        console.log(userpasswords)
+        res.send(userpasswords)
+    }
+})
+
+app.get('/getmynotes', async (req, res) =>{
+    var usernotes = []
+    if(req.session.loggedin === "true"){
+        usernotes = await Notes.find({ username: req.session.username }).exec()
+        res.send(JSON.stringify(usernotes))
+    }
+})
+
+app.get('/getmycards', async (req, res) =>{
+    var usercards = []
+    if(req.session.loggedin === "true"){
+        usercards = await Cards.find({ username: req.session.username }).exec()
+        console.log(usercards)
+        res.send(JSON.stringify(usercards))
+    }
+})
+
 function between(min, max) {  
     return Math.floor(
       Math.random() * (max - min + 1) + min
     )
 }
-random = between(100000,999999).toString();
-function strcmp(a, b){   
-    return (a<b?-1:(a>b?1:0));  
-}
-
-
-app.get('/', function(req, res) {
-    req.session.isAuth = true,
-    res.sendFile(path.join('public/index.html', {root: __dirname}).toString());
-}).listen(3000);
-
-app.post("/register", async(req,res)=>{
-    console.log(req.body)
-    const { username, email } = req.body
-
-    try{
-        await User.create({
-            username, 
-            password
-        })
-        console.log('User created successfully: ', response)
-    }catch(error){
-        console.log(error)
-        return res.json({ status: 'error'})
-    }
-    var username = req.body.username;
-    var email = req.body.email;
-    console.log(req.body);
-    data = {
-        "username": username,
-        "email" : email
-    }
-    async function validateEmailAccessibility(email){
+random = between(100000,999999).toString()
+app.post('/', async (req, res) =>{
+    var email = req.body.email
+    var username = req.body.username
+    req.session.username = username
+    req.session.email = email
+    req.session.otp = random
+    req.session.loggedin = "false"
+    req.session.lastaccessed = Date.now()
+    req.session.createdOn = Date.now()
+    async function emailexists(email){
         try{
-            var Exists = await db.collection('userdata').findOne({"email": email});
+            var Exists = await User.findOne({email: email}).exec()
         }catch(err){
             console.error(err);
         }
-        return Exists == null;
+        return Exists !== null;
     }
-    validateEmailAccessibility(email).then(function(valid) {
-        if (valid) {
-            transporter.sendMail(mailOptions, function(error, info){
-                if (error) {
-                  console.log(error);
-                } else {
-                  fixed = random;
-                }
-            });
-            return res.redirect('verify_otp.html');
-        } else {
-            return res.redirect("already_registered.html");
-        }
-    });
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'pwdt1088@gmail.com',
-          pass: 'passwordist123'
-        }
-    });
-    var mailOptions = {
-        from: 'pwdt1088@gmail.com',
-        to: email,
-        subject: 'Your Account Activation Code: ',
-        text: "Your Email was recently used to register at Passwordist, activate your account using the below code:\n".concat(random)
-    };
-})
-
-app.post("/validateotp",(req,res)=>{
-    var one = req.body.first;
-    var two = req.body.second;
-    var three = req.body.third;
-    var four = req.body.fourth;
-    var five = req.body.fifth;
-    var six = req.body.sixth;
-    var otpstring = one + two + three + four + five + six;
-    var otp = otpstring.toString();
-    if(strcmp(otp, fixed) == 0){
-        db.collection('userdata').insertOne(data,(err,collection)=>{
-            if(err){
-                throw err;
-            }
-            console.log("OTP verified Successfully");
-        });
-        return res.redirect('MasterPassword.html')
-    }else {
-        return res.redirect("already_registered.html");
+    if(await User.findOne({username: username}).exec() !== null){
+        res.render(__dirname + '/views/pages/index.ejs', { message: "Username already registered", username: req.session.username,loggedin: false, title: 'Error!', icon: 'error', confirmButtonText: 'Try again' })
     }
-})
-app.post("/set_master_password", (req, res)=>{
-    var pass = req.body.master;
-    var cpass = req.body.confirmpass;
-    if(strcmp(pass, cpass) == 0){
-        db.collection('userdata').updateOne({'email': sess.activeuseremail}, {$set: {'MasterPassword': pass}}, (err,collection)=>{
-            if(err){
-                throw err;
-            }
-            console.log("Master Password Created successfully");
-        });
-        res.redirect("Login.html");
+    if(await emailexists(email)){
+        res.render(__dirname + '/views/pages/index.ejs', { message: "Email already registered", username: req.session.username,loggedin: false, title: 'Error!', icon: 'error', confirmButtonText: 'Try again' })
     }else{
-        res.redirect("password_validation.html");
-    }
-});
-
-app.post('/auth',(req,res) => {
-    var email = req.body.email;
-    var password = req.body.password;
-    data={
-        "email": email,
-        "MasterPassword": password
-    }
-    db.collection('userdata').findOne(data, function(err, existingUser){
-        if(existingUser == null){
-            return res.redirect("wrong_mp.html");
-        }else{
-            sess.activeuseremail = req.body.email;
-            return res.redirect("vault.html");
+        try {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user: 'pwdt1088@gmail.com',
+                  pass: 'passwordist123'
+                }
+            })
+            const options = {
+                from: 'pwdt1088@gmail.com',
+                to: email,
+                subject: 'Your Account Activation Code: ',
+                html: `<h1> Welcome aboard!</h1><h2>Your Email was recently used to register at Passwordist, activate your account using the below code:</h2><p style="text-align: center; font-size: x-large;"><b>${random}</b></p>`,
+            }
+            transporter.sendMail(options, function(err, info){
+                if (err) {
+                    console.log(err);
+                } 
+            })
+            res.render(__dirname + '/views/pages/verify_otp.ejs', { email: email, message: ""})   
+        } catch (error) {
+            console.log(error)
         }
-    });
-});
-app.post('/logout',(req,res) => {
-    return res.redirect("/vault.html");
-});
+    }
+})  
 
-console.log("Listening on PORT 3000")
+app.post('/validateotp', async (req, res) =>{
+    const givenotp = req.session.otp
+    var otpstring = req.body.first + req.body.second + req.body.third + req.body.fourth + req.body.fifth + req.body.sixth;
+    var inputotp = otpstring.toString();
+    if(givenotp === inputotp){
+        var user = new User({ username: req.session.username, email: req.session.email, createdOn: req.session.createdOn} )
+        user.save(), (function(err,collection){
+            if(err){
+                throw err;
+            }
+            console.log("User Created Successfully!");
+        });
+        res.render(__dirname + '/views/pages/MasterPassword.ejs', { username: req.session.username, message: "", title: "", icon: "", confirmButtonText: ""})
+    }else {
+        res.render(__dirname + '/views/pages/verify_otp.ejs', {email: req.session.email, message: "Invalid OTP"})
+    }
+})
+
+app.post('/setmasterpassword', async (req, res) =>{
+    var password = req.body.master
+    var confirmation = req.body.confirmpass
+    if(password === confirmation){
+        try{
+            console.log(await User.findOneAndUpdate({ email: req.session.email }, { $set: { password: await bcrypt.hash(password, 12)}, lastUpdatedPasswordOn: Date.now()}).exec())
+            res.render(__dirname + '/views/pages/Login.ejs', {
+                message: "Master password set successfully, you can now login to your vault!",
+                title: 'CREATED!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            })
+        }catch(err){
+            console.error(err);
+        }
+    }else{
+        res.render(__dirname + '/views/pages/MasterPassword.ejs', { username: req.session.username, message: "Passwords do not match!"})
+    }
+})
+
+app.post('/login', (req, res) =>{
+    User.findOne({email: req.body.email}).exec( function(error, user){
+        if(error){
+            callback({error: true})
+        }else if(!user){
+            res.render(__dirname + '/views/pages/login.ejs', {
+                message: 'No user with that email', title: 'Error!', icon: 'error', confirmButtonText: 'Try again'
+            })
+        }else{
+            user.comparePassword(req.body.password, function(matchError, isMatch) {
+                if (matchError) {
+                    res.render(__dirname + '/views/pages/Login.ejs', {
+                        message: 'Match Error', title: 'Error!', icon: 'error', confirmButtonText: 'Try again'
+                    })
+                } else if (!isMatch) {
+                    res.render(__dirname + '/views/pages/Login.ejs', {
+                        message: 'Invalid Password', title: 'Error!', icon: 'error', confirmButtonText: 'Try again'
+                    })
+                } else {
+                    req.session.username = user.username
+                    req.session.email = user.email
+                    req.session.otp = user.otp
+                    req.session.loggedin = "true"
+                    req.session.lastaccessed = Date.now()
+                    res.render(__dirname + '/views/pages/vault.ejs', {
+                        email: req.session.email
+                    })
+                }
+            })
+        }
+    })
+})
+
+app.post('/logout', (req, res) =>{
+    if(req.session.loggedin !== undefined || req.session.loggedin === "true"){
+        req.session.loggedin = "false"
+        req.session.destroy();
+    }
+    res.render(__dirname + '/views/pages/index.ejs', {
+        message: 'You have been logged out successfully', username: "", loggedin: false, title: 'LOGGED OUT!', icon: 'success', confirmButtonText: 'OK'
+    })
+})
+
+app.post('/save-notes', async (req, res) =>{
+    if(req.session.loggedin === "true"){
+        try {    
+            await new Notes({ username: req.session.username, title: req.body.title, date: req.body.date, color: req.body.color, time: req.body.time, note: req.body.note} ).save()
+            res.render(__dirname + '/views/partials/_notes.ejs', {
+                message: "Note created successfully", title: "CREATED!", icon: "success", confirmButtonText: "OK", saved: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
+
+app.post('/save-cards', async (req, res) =>{
+    if(req.session.loggedin === "true"){
+        try {    
+            await new Cards({ username: req.session.username, card_number: req.body.card_number, card_holder_name: req.body.card_holder_name, card_type: req.body.card_type, expiry_date: req.body.expiry_date ,CVV: req.body.CVV} ).save()
+            res.render(__dirname + '/views/partials/_cards.ejs', {
+                message: "Credit card added successfully", title: "ADDED!", icon: "success", confirmButtonText: "OK", saved: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
+
+app.listen(3000)
