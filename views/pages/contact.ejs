@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel = "icon" href = ../img/LOGO.ico" type = "image/x-icon"> 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Contact Us</title>
+</head>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+    *{
+        font-family: 'Poppins', sans-serif;
+    }
+    .logo{
+        display: block;
+        width: 79%;
+        height: 40%;
+        margin-left: 65px;
+        margin-top: 129px;
+    }
+
+    input[type=text], select, textarea {
+        width: 100%;
+        padding: 12px; 
+        border: 1px solid #ccc;
+        border-radius: 4px; 
+        box-sizing: border-box; 
+        margin-top: 6px; 
+        margin-bottom: 16px;
+        resize: vertical
+    }
+
+    input[type=submit] {
+        position: relative;
+        background-color: #04AA6D;
+        color: white;
+        padding: 12px 20px;
+        margin: 0;
+        left: 50%;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        -ms-transform: translateX(-50%);
+        transform: translateX(-50%);
+    }
+
+    input[type=submit]:hover {
+        background-color: #45a049;
+    }
+    label{
+        color: white;
+    }
+    
+    .container {
+        display: flex;
+        width: auto;
+        height: auto;
+        top: 10px;
+        margin: 0 auto;
+        padding: 10px;
+        position: relative;
+        border-radius: 5px;
+        background-color: #5D5FEF;
+        text-shadow: 0px 2.97702px 2.97702px rgba(0, 0, 0, 0.25);
+        padding: 20px;
+        width: 50%;
+    }
+    .info{
+        padding: 20px;
+        width: 900px;
+        color: white
+    }
+</style>
+<body>
+    <div class="flex" style="    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;">
+        <a href="/"><img class="logo" src="../img/LOGO.png" alt="Logo"></a>
+        <div class="container">
+            <div class="info">
+                <h1>Help?</h1>
+                <img src="../img/help.png" width="300px" height="300px">
+                <p>We are here to help you whenever you run into a problem</p>
+            </div>
+            <form action="/greivance" method="post">
+              <label for="fname">Name</label>
+              <input type="text" id="name" name="fname" placeholder="Your name..">
+              <label for="lname">Email</label>
+              <input type="text" id="lname" name="email" placeholder="Your email associated with passwordist account..">
+              <label for="country">Country</label>
+              <select id="country" name="country">
+                <option value="australia">India</option>
+                <option value="canada">Canada</option>
+                <option value="usa">USA</option>
+                <option value="usa">UK</option>
+              </select>
+              <label for="subject">Message</label>
+              <textarea style="height: 150px;" id="subject" name="subject" placeholder="Describe your issue.." style="height:200px"></textarea>
+              <input type="submit" value="Submit">
+            </form>
+          </div>
+    </div>
+    <script>
+        let message = '<%-message%>'
+        let title = '<%-title%>'
+        let icon = '<%-icon%>'
+        let confirmButtonText = '<%-confirmButtonText%>'
+        if(message !== ""){
+            Swal.fire({
+                title: title,
+                text: message,
+                icon: icon,
+                confirmButtonText: confirmButtonText
+            }) 
+        }  
+    </script>   
+</body>
+</html>
