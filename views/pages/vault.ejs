@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel = "icon" href = "../img/LOGO.ico" type = "image/x-icon"> 
     <link rel="stylesheet" href="../css/vault.css">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Vault</title>
-    <script src="vault.js" defer></script>
 </head>
 <body>
-    <button class="addcard" id="add" onclick="on()"><img src="../img/plus.png"  style="height: 112px;width: 94px;margin: -51px;"></button>
+    <button class="addcard" id="add1" onclick="on()"><img src="../img/plus.png"  style="height: 112px;width: 94px;margin: -51px;"></button>
+    <button class="addcard2" id="add2"><img src="../img/plus.png"  style="height: 112px;width: 94px;margin: -51px;"></button>
     <div class="sidebar" id="mySidebar">
         <ul class="ul-list" id="ul-list">
             <button id = "openbtn" class="openbtn" onclick="openNav()"><img src="../img/ellipsis-solid.svg"></button>
@@ -35,9 +36,9 @@
                 <li><img src="../img/building-columns-solid.svg" class="list-img"></li>
                 <span class="text" id="list-text-5">Bank accounts</span>
             </button>
-            <button class="tab" style="margin-top: 136px;height: 50px;" onclick="show()">
-                <li><img src="../img/gear-solid.svg" class="list-img"></li>
-                <span class="text" id="list-text-6">Settings</span>
+            <button class="tab" style="margin-top: 136px;height: 50px;" onclick="redirecttogenerate()">
+                <li><img src="../img/generate.svg" class="list-img"></li>
+                <span class="text" id="list-text-6">Generate Password</span>
             </button>
         </ul>
     </div>
@@ -47,7 +48,10 @@
                 <a href="/"><img class="logo"src="../img/LOGO.png" alt="Logo"></a>
             </div>
             <div class="searchbox">
-                <input class="search" type="textbox" placeholder="Search my Vault">
+                <form id="search-cards">
+                    <input class="search" id="search" type="textbox" onkeyup="handleSearch()" placeholder="Search my Vault">
+                    <button class="searchbutton" id="searchbutton" onclick="handleSearch()" style="position: absolute; margin-left: -45px;width: 44px;height: 40px; border-radius: 20px; border: none;"><img src="../img/search.svg" height="25px" width="25px"></button>
+                </form>
             </div>
             <div class="acco">
                 <form action="/logout" method="post">
@@ -55,119 +59,393 @@
                 </form>
             </div>
         </div> 
-        <div class="content" id="content" style="visibility: visible;">
-                Nothing to show in vault, use the button below to start saving!
-        </div>
-    </div> 
-    <iframe class = "addform" id="saveform" height="40%" ></iframe>
+        <div class="content" id="content" style="visibility: visible;"></div> 
+    <iframe class = "addform" id="saveform" height="40%" src="/passwords"></iframe>
     <div class="save-buttons" id="save">
         <button style="margin: 10px 15px;padding: 10px; background: white; border: none; outline: 2px solid #4776e6; border-radius: 50%; width: 50px; height: 50px;" onclick ="off()">X</button>
     </div>
 </body>
 <script>
-    async function fetchPasswords(){
-        document.getElementById("saveform").src = "/passwords"
-        const btn = document.getElementById("switch-to-passwords")
-        const response = await fetch("/getmypass")
-        const note = await response.json()
-        return note
-    }
     fetchPasswords()
-    .then((data) => {
-        const container = document.getElementById('content');
-        data.forEach((result, idx) =>{
-            const card = document.createElement('div');
-            card.classList = 'card-body';
-            const content = `
-                <div class="grid" style="background-color: ${result.color} max-height: 30px">
-                    <div class="grid-item2">
-                    <div class="label">
-                        <p class="header" id="title">${result.title}</p>
-                        <p class="name" id="notename">${result.note}</p>
-                    </div>
-                    <div class="label2">
-                        <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
-                        <div class="tooltip"><button class = "edit-delete" ><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
-                    </div>
-                </div>
-                
-            `;
-            container.innerHTML += content;
+    async function decryptpassword(encryption){
+        const data = { iv: encryption.iv, password: encryption.password}
+        const response = await fetch("/decryptpassword", {
+            method: 'POST',
+            headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         })
-    })
-    async function fetchNotes(){
-        document.getElementById("saveform").src = "/notes"
-        const btn = document.getElementById("switch-to-notes")
-        const response = await fetch("/getmynotes")
-        const note = await response.json()
-        return note
+        const ans = await response.json()
+        return ans
     }
-    fetchNotes()
-    .then((data) => {
-        const container = document.getElementById('content');
-        container.innerHTML = ""
-        data.forEach((result, idx) =>{
-            const card = document.createElement('div');
-            card.classList = 'card-body';
-            const content = `
-                <div class="grid" style="background-color: ${result.color} max-height: 30px">
-                    <div class="grid-item2">
-                    <div class="label">
-                        <p class="header" id="title">${result.title}</p>
-                        <p class="name" id="notename">${result.note}</p>
+    function fetchPasswords(){
+        async function fetchpass(){
+            const container = document.getElementById('content');
+            document.getElementById("saveform").src = "/passwords"
+            const response = await fetch("/getmypass")
+            const card = await response.json()
+            return card
+        }
+        fetchpass()
+        .then((data) => {
+            const container = document.getElementById('content');
+                container.innerHTML = ""
+                if(data[0] === undefined){
+                    const nothinginvault = `
+                        <p id="nothing" class="nothing"></p>
+                    `
+                    container.innerHTML += nothinginvault
+                    const nothing = document.getElementById('nothing');
+                    nothing.style.fontSize = "24px"
+                    nothing.style.marginTop = "170px"
+                    nothing.style.marginLeft = "80px"
+                    nothing.innerHTML = "Nothing to show in vault, click the button at the bottom right to add your passwords now!"
+                    nothing.style.color = "#8D8C8C"
+                }
+            data.forEach((result, idx) =>{
+                const card = document.createElement('div');
+                card.classList = 'card-body';
+                const content = `
+                    <div class="grid" id="grid-${idx}">
+                        <div class="grid-item">
+                            <img class="test" src="https://logo.clearbit.com/${result.website_url}"  style="width: 315px; height: 172px;border-top-left-radius: 20px;border-top-right-radius: 20px; object-fit: contain">
+                            <button class="copy-button" id="copy-button-${idx}" onclick="copypassword(${idx})">COPY PASSWORD</button>
+                        </div>
+                        <div class="grid-item2">
+                        <div class="label">
+                            <p class="header"><b><span id="website_name-${idx}">${result.website_name}</span></b></p>
+                            <p class="name2">Username: <span id="username-${idx}">${result.website_username}</span></p>
+                            <p class="name"id="password-${idx}"></p>
+                        </div>
+                        <div class="label2">
+                            <div class="tooltip"><button class = "edit-delete" id="edit-pass-${idx}" onclick="edit(${idx})"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                            <div class="tooltip"><button class = "edit-delete" id="delete-pass-${idx}" onclick="delpass(${idx})"><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                        </div>
                     </div>
-                    <div class="label2">
-                        <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
-                        <div class="tooltip"><button class = "edit-delete" ><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
-                    </div>
-                </div>
-                
-            `;
-            container.innerHTML = content;
+                `;
+                container.innerHTML += content; 
+                var decryptedpassword = decryptpassword({ iv: result.iv, password: result.website_password })
+                decryptedpassword.then((dec) =>{
+                    document.getElementById("password-" + idx).innerHTML = dec
+                })
+            })
         })
-    })
+    }
+    function fetchNotes(){
+        async function fetchnotes(){
+            document.getElementById("saveform").src = "/notes"
+            const response = await fetch("/getmynotes")
+            const note = await response.json()
+            return note
+        }
+        fetchnotes()
+            .then((data) => {
+                const container = document.getElementById('content');
+                container.innerHTML = ""
+                if(data[0] === undefined){
+                    const nothinginvault = `
+                        <p id="nothing" class="nothing"></p>
+                    `
+                    container.innerHTML += nothinginvault
+                    const nothing = document.getElementById('nothing');
+                    nothing.style.fontSize = "24px"
+                    nothing.style.marginTop = "170px"
+                    nothing.style.marginLeft = "80px"
+                    nothing.innerHTML = "Nothing to show in vault, click the button at the bottom right to add your notes now!"
+                    nothing.style.color = "#8D8C8C"
+                }
+                data.forEach((result, idx) =>{
+                    const card = document.createElement('div');
+                    card.classList = 'card-body';
+                    const content = `
+                        <div class="grid"  style="background-color: ${result.color}">
+                            <div class="grid-item2">
+                            <div class="label">
+                                <p class="header" id="title-${idx}">${result.title}</p>
+                                <p class="name2" id="notename-${idx}">${result.note}</p>
+                            </div>
+                            <div class="label2">
+                                <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                                <div class="tooltip"><button class = "edit-delete" id="delete-notes-${idx}" onclick="delnote(${idx})"><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += content;
+                })
+            })
+    }
+    function fetchCards(){
+        async function fetchcards(){
+            const container = document.getElementById('content');
+            document.getElementById("saveform").src = "/cards"
+            const response = await fetch("/getmycards")
+            const card = await response.json()
+            return card
+        }
+        fetchcards()
+        .then((data) => {
+            const container = document.getElementById('content');
+                container.innerHTML = ""
+                if(data[0] === undefined){
+                    const nothinginvault = `
+                        <p id="nothing" class="nothing"></p>
+                    `
+                    container.innerHTML += nothinginvault
+                    const nothing = document.getElementById('nothing');
+                    nothing.style.fontSize = "24px"
+                    nothing.style.marginTop = "170px"
+                    nothing.style.marginLeft = "80px"
+                    nothing.innerHTML = "Nothing to show in vault, click the button at the bottom right to add your cards now!"
+                    nothing.style.color = "#8D8C8C"
+                }
+            data.forEach((result, idx) =>{
+                const card = document.createElement('div');
+                card.classList = 'card-body';
+                const content = `
+                    <div class="grid">
+                        <div class="grid-item">
+                            <img class="test" src="https://logo.clearbit.com/${result.bank_website}"  style="width: 315px; height: 172px;border-top-left-radius: 20px;border-top-right-radius: 20px; object-fit: contain"> 
+                            <button class="copy-button" id="copy-button-${idx}" onclick="copycard(${idx})">COPY NUMBER</button>
+                        </div>
+                        <div class="grid-item2">
+                        <div class="label">
+                            <p class="header"><b><span id="card_type-${idx}">${result.bank_name} - ${result.card_type}</span> card</b></p>
+                            <p class="name2">Number: <span id="card_number-${idx}">${result.card_number}</span></p>
+                            <p class="name" >CVV:  <span id="cvv-${idx}">${result.CVV}</span></p>
+                        </div>
+                        <div class="label2">
+                            <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                            <div class="tooltip"><button class = "edit-delete" id="delete-card-${idx}" onclick="delcard(${idx})"><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += content; 
+            })
+        })
+    }
     function fetchAddresses(){
-        document.getElementById("saveform").src = "/addresses"
-    }
-    async function fetchCards(){
-        const container = document.getElementById('content');
-        document.getElementById("saveform").src = "/cards"
-        const btn = document.getElementById("switch-to-cards")
-        const response = await fetch("/getmycards")
-        const note = await response.json()
-        return note
-    }
-    fetchCards()
-    .then((data) => {
-        const container = document.getElementById('content');
-        data.forEach((result, idx) =>{
-            const card = document.createElement('div');
-            card.classList = 'card-body';
-            const content = `
-                <div class="grid">
-                    <div class="grid-item">
-                            <div class="image">
-                                <img class="test" src="../img/GoogleLogo.png" width="100%" height="100%">
-                            </div> 
-                        <button class="copy-button" id="copy-button-${idx}">COPY NUMBER</button>
+        async function fetchaddresses(){
+            const container = document.getElementById('content');
+            document.getElementById("saveform").src = "/addresses"
+            const response = await fetch("/getmyaddresses")
+            const card = await response.json()
+            return card
+        }
+        fetchaddresses()
+        .then((data) => {
+           const container = document.getElementById('content');
+                container.innerHTML = ""
+                if(data[0] === undefined){
+                    const nothinginvault = `
+                        <p id="nothing" class="nothing"></p>
+                    `
+                    container.innerHTML += nothinginvault
+                    const nothing = document.getElementById('nothing');
+                    nothing.style.fontSize = "24px"
+                    nothing.style.marginTop = "170px"
+                    nothing.style.marginLeft = "80px"
+                    nothing.innerHTML = "Nothing to show in vault, click the button at the bottom right to add addresses now!"
+                    nothing.style.color = "#8D8C8C"
+                }
+            data.forEach((result, idx) =>{
+                const card = document.createElement('div');
+                card.classList = 'card-body';
+                const content = `
+                    <div class="grid">
+                        <div class="grid-item2">
+                        <div class="label">
+                            <p class="header" id="company_name-${idx}">${result.company_name}</p>
+                            <p class="name2">Address: <span id="address-${idx}">${result.address}</span></p>
+                            <p class="name2" id="city-${idx}">City: ${result.city}</p>
+                            <p class="name2" id="pin-${idx}">PinCode: ${result.postalcode}</p>
+                        </div>
+                        <div class="label2">
+                            <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                            <div class="tooltip"><button class = "edit-delete" id="delete-add-${idx}" onclick="deladd(${idx})"><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                        </div>
                     </div>
-                    <div class="grid-item2">
-                    <div class="label">
-                        <p class="header" id="card_type-${idx}">${result.card_type} card</p>
-                        <p class="name" id="card_number-${idx}">Number: ${result.card_number}</p>
-                        <p class="name" id="cvv-${idx}">CVV: ${result.CVV}</p>
-                    </div>
-                    <div class="label2">
-                        <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
-                        <div class="tooltip"><button class = "edit-delete" ><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
-                    </div>
-                </div>
-            `;
-            container.innerHTML = content; 
+                `;
+                container.innerHTML += content; 
+            })
         })
-    })
+    }
     function fetchAccounts(){
-        document.getElementById("saveform").src = "/accounts"
+        async function fetchaccounts(){
+            const container = document.getElementById('content');
+            document.getElementById("saveform").src = "/accounts"
+            const response = await fetch("/getmyaccounts")
+            const card = await response.json()
+            return card
+        }
+        fetchaccounts()
+        .then((data) => {
+            const container = document.getElementById('content');
+                container.innerHTML = ""
+                if(data[0] === undefined){
+                    const nothinginvault = `
+                        <p id="nothing" class="nothing"></p>
+                    `
+                    container.innerHTML += nothinginvault
+                    const nothing = document.getElementById('nothing');
+                    nothing.style.fontSize = "24px"
+                    nothing.style.marginTop = "170px"
+                    nothing.style.marginLeft = "80px"
+                    nothing.innerHTML = "Nothing to show in vault, click the button at the bottom right to add your bank accounts now!"
+                    nothing.style.color = "#8D8C8C"
+                }
+            data.forEach((result, idx) =>{
+                const card = document.createElement('div');
+                card.classList = 'card-body';
+                const content = `
+                    <div class="grid">
+                        <div class="grid-item">
+                            <img class="test" src="https://logo.clearbit.com/${result.website_url}" style="width: 315px; height: 172px;border-top-left-radius: 20px;border-top-right-radius: 20px; object-fit: contain">
+                            <button class="copy-button" id="copy-button-${idx}" onclick="copyaccount(${idx})">COPY NUMBER</button>
+                        </div>
+                        <div class="grid-item2">
+                        <div class="label">
+                            <p class="header" id="card_type-${idx}">${result.bank_name}</p>
+                            <p class="name2" id="account_number-${idx}"><b>Account number:</b> <span id="account-${idx}">${result.account_number}</span></p>
+                            <p class="name2"><b>IFSC: </b><span id="IFSC-${idx}">${result.IFSC}</span></p>
+                        </div>
+                        <div class="label2">
+                            <div class="tooltip"><button class = "edit-delete"><img src="../img/pen-to-square-solid.svg"><span class="tooltiptext">Edit</span></button></div>
+                            <div class="tooltip"><button class = "edit-delete" id="delete-account-${idx}" onclick="delaccount(${idx})"><img src="../img/trash-solid.svg"><span class="tooltiptext">Delete</span></button></div>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += content; 
+            })
+        })
+    }
+    function handleSearch(){
+        var input, filter, li, a, txtvalue;
+        input = document.getElementById('search');
+        filter = input.value.toUpperCase();
+        for (i = 0; i < 9;  i++) {
+            a = document.getElementById("grid-" + i);
+            var textContent = document.getElementById("website_name-" + i).innerHTML
+            txtValue = textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                a.style.display = "";
+            } else {
+                a.style.display = "none";
+            }
+        }
+    }
+    function delpass(idx){
+        var website_name = document.getElementById("website_name-" + idx).innerHTML
+        var username= document.getElementById("username-" + idx).innerHTML
+        async function deletecard(){
+            data = { username: username, website_name: website_name}
+            console.log(data)
+            const response = await fetch("/deletepass", {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then((result) => {
+                location.reload()
+            })
+        }
+        deletecard();
+    }
+    function delnote(idx){
+        var title = document.getElementById("title-" + idx).innerHTML
+        var note= document.getElementById("notename-" + idx).innerHTML
+        async function deletecard(){
+            data = { title: title, notename: note}
+            const response = await fetch("/deletenote", {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then((result) => {
+                location.reload()
+            })
+        }
+        deletecard();
+    }
+    function deladd(idx){
+        var company_name = document.getElementById("company_name-" + idx).innerHTML
+        var address = document.getElementById("address-" + idx).innerHTML
+        async function deletecard(){
+            data = { company_name: company_name, address: address}
+            const response = await fetch("/deleteadd", {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then((result) => {
+                location.reload()
+            })
+        }
+        deletecard();
+    }
+    function delcard(idx){
+        var card_number = document.getElementById("card_number-" + idx).innerHTML
+        var cvv = document.getElementById("cvv-" + idx).innerHTML
+        async function deletecard(){
+            data = { card_number: card_number, CVV: cvv}
+            const response = await fetch("/deletecard", {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then((result) => {
+                location.reload()
+            })
+        }
+        deletecard();
+    }
+    function delaccount(idx){
+        var account = document.getElementById("account-" + idx).innerHTML
+        var IFSC = document.getElementById("IFSC-" + idx).innerHTML
+        async function deletecard(){
+            data = { account_number: account, IFSC: IFSC}
+            const response = await fetch("/deleteaccount", {
+                method: 'POST',
+                headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            }).then((result) => {
+                location.reload()
+            })
+        }
+        deletecard();
+    }
+    function redirecttogenerate(){
+        window.location.href = "generatepassword";
+    }
+    function copypassword(idx){
+        var copyText = document.getElementById("password-".concat(idx)).innerHTML;
+        navigator.clipboard.writeText(copyText);
+        alert("Copied password: " + copyText);
+    }
+    function copycard(idx){
+        var copyText = document.getElementById("card_number-".concat(idx)).innerHTML;
+        navigator.clipboard.writeText(copyText);
+        alert("Copied card number: " + copyText);
+    }
+    function copyaccount(idx){
+        var copyText = document.getElementById("account-".concat(idx)).innerHTML;
+        navigator.clipboard.writeText(copyText);
+        alert("Copied account number: " + copyText);
+    }
+    function show(element){
+        document.getElementById(element).style.visibility = "visible";
     }
     function on() {
         document.getElementById("saveform").style.display = "block";
@@ -188,8 +466,16 @@
             el.className = 'classname';
         }
     }
-    function show(element){
-        document.getElementById(element).style.visibility = "visible";
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "80px";
+        document.getElementById("main").style.marginLeft= "16px";
+        document.getElementById("openbtn").style.visibility = "visible";
+        document.getElementById("closebtn").style.visibility = "hidden";
+        for(var i = 1; i < 7; i++){
+            var el = document.getElementById('list-text-' + i)
+            el.style.visibility = 'hidden';
+            el.className = 'text';
+        }
     }
     function changeText(){
         var display = document.getElementById("logout-button");
@@ -201,22 +487,8 @@
         display.value = "";
         display.value = '<%= email%>';
     }
-    function closeNav() {
-        document.getElementById("mySidebar").style.width = "80px";
-        document.getElementById("main").style.marginLeft= "16px";
-        document.getElementById("openbtn").style.visibility = "visible";
-        document.getElementById("closebtn").style.visibility = "hidden";
-        for (let el of document.querySelectorAll('span')) {
-            el.style.visibility = 'hidden';
-            el.className = 'text';
-        }
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
     }
-    document.getElementById("copy-button-0").addEventListener('click', function copy() {
-        var copyText = document.getElementById("cvv-0");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); 
-        navigator.clipboard.writeText(copyText.value);
-        alert("Card number copied: " + copyText.value);
-    })
 </script>
 </html>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <title>Add Payment</title>
+    <title>Add Cards</title>
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
         *{
@@ -59,6 +59,9 @@
         }
         .CVV{
             padding-bottom: 20px;
+            margin-left: 150px;
+            margin-bottom: 65px;
+            margin-top: -86px;
         }
         .Expiry_date input{
             padding-left: 5px;
@@ -88,12 +91,12 @@
             display: flex;
         }
         .CVV input{
-            height: 35px;
+            height: 42px;
             padding-left: 5px;
             border-radius: 4px;
             outline: none;
             border: 1px solid;
-            width: 155px;
+            width: 104px;
             display: flex;
         }
         .save-buttons{
@@ -123,27 +126,33 @@
             <div class="head_container_card">
                 <div class="start_head_container_card">
                     <div class="card_type">
-                        <input type="radio" class="card_type"
-                        name="card_type" value="Debit" unchecked>
+                        <input type="radio" class="card_type" name="card_type" value="Debit" unchecked>
                         <label for="Choice1">Debit Card</label>
 
-                        <input type="radio" class="card_type"
-                        name="card_type" value="credit" unchecked>
+                        <input type="radio" class="card_type" name="card_type" value="Credit" unchecked>
                         <label for="Choice1">Credit Card</label>
+                    </div>
+                    <div class="card_number">
+                        <label>Bank Website URL: </label>
+                        <input type="text" name="bank_website" placeholder="Enter Bank Web Address">
+                    </div>
+                    <div class="card_number">
+                        <label>Bank Name: </label>
+                        <input type="text" name="bank_name" placeholder="Enter Bank Name">
                     </div>
 
                     <div class="card_number">
                         <label>Card Number: </label>
-                        <input type="number" maxlength="16" name="card_number" placeholder="Enter Card Number">
+                        <input type="text" maxlength="16" name="card_number" placeholder="Enter Card Number">
                     </div>
 
                     <div class="card_holder_name">
-                        <label>Card Holder Name: </label>
+                        <label>Name on Card: </label>
                         <input type="text" name="card_holder_name" placeholder="Enter Card Holder's Name">
                     </div>          
                     
                     <div class="Expiry_date">
-                        <label>Date: </label>
+                        <label>Expiry Date: </label>
                         <input type="date" class="expiry_date" name="expiry_date">
                     </div>
 
@@ -176,7 +185,7 @@
     if(saved === "true"){
         setTimeout(function(){
             document.getElementById("saved-redirect").click()
-        }, 3000);
+        }, 1500);
     }   
 </script>
 </html>

@@ -2,16 +2,22 @@ const express = require('express')
 const session = require('express-session')
 const nodemailer = require('nodemailer')
 const ejs = require('ejs')
+var bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo')
 const User = require('./models/User')
 const Notes = require('./models/Notes')
 const Cards = require('./models/Cards')
+const Address = require('./models/Addresses')
+const Accounts = require('./models/Accounts')
 const Passwords = require('./models/Passwords')
+const greivances = require('./models/Greivance')
+const {encrypt, decrypt} = require("./public/js/EncryptionHandler.js")
 
 const app = express()
-
+var jsonParser = bodyParser.json()
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 const mongoURI = "mongodb://localhost:27017/users"
 
 mongoose.connect(mongoURI,{
@@ -26,7 +32,7 @@ const store = MongoStore.create({
 app.set('trust proxy', 1)
 app.set('view-engine', ejs)
 app.use(session({ 
-    secret: 'g8&*&^gv087go8yg8o7gs087BUBo8yVY*&VOUV&^FWVD)yubOW#@*&Bhb',
+    secret: 'g8&*&^gv087go8yg8o7',
     saveUninitialized: false,
     resave: false,
     store: store,
@@ -93,6 +99,12 @@ app.get('/generatepassword', (req, res) =>{
     res.render(__dirname + '/views/pages/generate_password.ejs')
 })
 
+app.get('/contact', (req, res) =>{
+    res.render(__dirname + '/views/pages/contact.ejs', {
+        message: "", title: "", icon: "", confirmButtonText: ""
+    })
+})
+
 app.get('/vault', authenticateUser, (req,res) =>{ // user should be authenticated before they can access the vault
     res.render(__dirname + '/views/pages/vault.ejs', {
         email: req.session.email
@@ -100,44 +112,38 @@ app.get('/vault', authenticateUser, (req,res) =>{ // user should be authenticate
 })
 
 app.get('/passwords', (req, res) =>{
-    res.render(__dirname + '/views/partials/_passwords.ejs'), {
-        message: "", title: "", icon: "", confirmButtonText: ""
-    }
+    res.render(__dirname + '/views/partials/_passwords.ejs', {
+        message: "", title: "", icon: "", confirmButtonText: "", saved: false
+    })
 })
-
 app.get('/notes', (req, res) =>{
     res.render(__dirname + '/views/partials/_notes.ejs', {
         message: "", title: "", icon: "", confirmButtonText: "", saved: false
     })
 })
-
 app.get('/addresses', (req, res) =>{
-    res.render(__dirname + '/views/partials/_addresses.ejs'), {
-        message: "", title: "", icon: "", confirmButtonText: ""
-    }
+    res.render(__dirname + '/views/partials/_addresses.ejs', {
+        message: "", title: "", icon: "", confirmButtonText: "", saved: false
+    })
 })
-
 app.get('/cards', (req, res) =>{
     res.render(__dirname + '/views/partials/_cards.ejs',{
         message: "", title: "", icon: "", confirmButtonText: "", saved: false
     })
 })
-
 app.get('/accounts', (req, res) =>{
-    res.render(__dirname + '/views/partials/_accounts.ejs'), {
-        message: "", title: "", icon: "", confirmButtonText: ""
-    }
+    res.render(__dirname + '/views/partials/_accounts.ejs', {
+        message: "", title: "", icon: "", confirmButtonText: "", saved: false
+    })
 })
 
 app.get('/getmypass', async (req, res) =>{
     var userpasswords = []
     if(req.session.loggedin === "true"){
-        userpasswords = await Passwords.findOne({})
-        console.log(userpasswords)
-        res.send(userpasswords)
+        userpasswords = await Passwords.find({ username: req.session.username }).exec()
+        res.send(JSON.stringify(userpasswords))
     }
 })
-
 app.get('/getmynotes', async (req, res) =>{
     var usernotes = []
     if(req.session.loggedin === "true"){
@@ -145,12 +151,24 @@ app.get('/getmynotes', async (req, res) =>{
         res.send(JSON.stringify(usernotes))
     }
 })
-
+app.get('/getmyaddresses', async (req, res) =>{
+    var usercards = []
+    if(req.session.loggedin === "true"){
+        usercards = await Address.find({ username: req.session.username }).exec()
+        res.send(JSON.stringify(usercards))
+    }
+})
 app.get('/getmycards', async (req, res) =>{
     var usercards = []
     if(req.session.loggedin === "true"){
         usercards = await Cards.find({ username: req.session.username }).exec()
-        console.log(usercards)
+        res.send(JSON.stringify(usercards))
+    }
+})
+app.get('/getmyaccounts', async (req, res) =>{
+    var usercards = []
+    if(req.session.loggedin === "true"){
+        usercards = await Accounts.find({ username: req.session.username }).exec()
         res.send(JSON.stringify(usercards))
     }
 })
@@ -209,7 +227,6 @@ app.post('/', async (req, res) =>{
         }
     }
 })  
-
 app.post('/validateotp', async (req, res) =>{
     const givenotp = req.session.otp
     var otpstring = req.body.first + req.body.second + req.body.third + req.body.fourth + req.body.fifth + req.body.sixth;
@@ -281,6 +298,12 @@ app.post('/login', (req, res) =>{
     })
 })
 
+app.post('/greivance', async (req, res) =>{
+    await new greivances({ username: req.session.username, first_name: req.body.fname, email: req.body.email, country: req.body.country, subject: req.body.subject} ).save()
+    res.render(__dirname + '/views/pages/contact.ejs',{
+        message: 'Greivance submitted, we will get back to you soon!', title: "SENT!", icon: "success", confirmButtonText: "OK"
+    })
+})
 app.post('/logout', (req, res) =>{
     if(req.session.loggedin !== undefined || req.session.loggedin === "true"){
         req.session.loggedin = "false"
@@ -290,7 +313,27 @@ app.post('/logout', (req, res) =>{
         message: 'You have been logged out successfully', username: "", loggedin: false, title: 'LOGGED OUT!', icon: 'success', confirmButtonText: 'OK'
     })
 })
-
+app.post('/decryptpassword', jsonParser, (req, res) => {
+    res.send(JSON.stringify(decrypt({iv: req.body.iv, password: req.body.password})))
+})
+app.post('/save-passwords', async (req, res) =>{
+    if(req.session.loggedin === "true"){
+        try {   
+            var web_pass = req.body.site_password
+            const encryptedPassword = encrypt(web_pass)
+            await new Passwords({ username: req.session.username, website_name: req.body.website_name, website_url: req.body.website_url, website_username: req.body.site_username, website_password: encryptedPassword.password, iv: encryptedPassword.iv} ).save()
+            res.render(__dirname + '/views/partials/_passwords.ejs', {
+                message: "Password added successfully", title: "CREATED!", icon: "success", confirmButtonText: "OK", saved: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
 app.post('/save-notes', async (req, res) =>{
     if(req.session.loggedin === "true"){
         try {    
@@ -307,11 +350,10 @@ app.post('/save-notes', async (req, res) =>{
         })
     }
 })
-
 app.post('/save-cards', async (req, res) =>{
     if(req.session.loggedin === "true"){
         try {    
-            await new Cards({ username: req.session.username, card_number: req.body.card_number, card_holder_name: req.body.card_holder_name, card_type: req.body.card_type, expiry_date: req.body.expiry_date ,CVV: req.body.CVV} ).save()
+            await new Cards({ username: req.session.username, bank_website: req.body.bank_website, bank_name: req.body.bank_name, card_number: req.body.card_number, card_holder_name: req.body.card_holder_name, card_type: req.body.card_type, expiry_date: req.body.expiry_date ,CVV: req.body.CVV} ).save()
             res.render(__dirname + '/views/partials/_cards.ejs', {
                 message: "Credit card added successfully", title: "ADDED!", icon: "success", confirmButtonText: "OK", saved: true
             })
@@ -324,5 +366,111 @@ app.post('/save-cards', async (req, res) =>{
         })
     }
 })
-
+app.post('/save-addresses', async (req, res) =>{
+    if(req.session.loggedin === "true"){
+        try {    
+            await new Address({ username: req.session.username, first_name: req.body.fname, last_name: req.body.lname, company_name: req.body.companyname, address: req.body.address, city: req.body.city, country: req.body.country ,state: req.body.state, postalcode: req.body.postalcode} ).save()
+            res.render(__dirname + '/views/partials/_addresses.ejs', {
+                message: "Address added successfully", title: "ADDED!", icon: "success", confirmButtonText: "OK", saved: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
+app.post('/save-accounts', async (req, res) =>{
+    if(req.session.loggedin === "true"){
+        try {    
+            await new Accounts({ username: req.session.username, first_name: req.body.fname, last_name: req.body.lname, bank_name: req.body.bankname, account_type: req.body.accounttype, account_number: req.body.accountnumber, IFSC: req.body.IFSC , branch_address: req.body.branchaddress, website_url: req.body.website_url} ).save()
+            res.render(__dirname + '/views/partials/_accounts.ejs', {
+                message: "Account added successfully", title: "ADDED!", icon: "success", confirmButtonText: "OK", saved: true
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: '' 
+        })
+    }
+})
+app.post('/deletepass', jsonParser, async (req, res) => {
+    if(req.session.loggedin === "true"){
+        try {   
+            await Passwords.deleteOne({ website_username: req.body.username, website_name: req.body.website_name}).exec()
+            var response = { message: "Password deleted successfully", title: "DELETED!", icon: "success", confirmButtonText: "OK", saved: true}
+            res.send(JSON.stringify(response))
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: ''
+        })
+    }
+})
+app.post('/deletenote', jsonParser, async (req, res) => {
+    if(req.session.loggedin === "true"){
+        try {   
+            await Notes.deleteOne({ title: req.body.title, notename: req.body.notename}).exec()
+            var response = { message: "Password deleted successfully", title: "DELETED!", icon: "success", confirmButtonText: "OK", saved: true}
+            res.send(JSON.stringify(response))
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: ''
+        })
+    }
+})
+app.post('/deleteadd', jsonParser, async (req, res) => {
+    if(req.session.loggedin === "true"){
+        try {   
+            console.log(await Address.deleteOne({ company_name: req.body.company_name, address: req.body.address}).exec())
+            var response = { message: "Address deleted successfully", title: "DELETED!", icon: "success", confirmButtonText: "OK", saved: true}
+            res.send(JSON.stringify(response))
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: ''
+        })
+    }
+})
+app.post('/deletecard', jsonParser, async (req, res) => {
+    if(req.session.loggedin === "true"){
+        try {   
+            console.log(await Cards.deleteOne({ card_number: req.body.card_number, CVV: req.body.CVV}).exec())
+            var response = { message: "Card deleted successfully", title: "DELETED!", icon: "success", confirmButtonText: "OK", saved: true}
+            res.send(JSON.stringify(response))
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: ''
+        })
+    }
+})
+app.post('/deleteaccount', jsonParser, async (req, res) => {
+    if(req.session.loggedin === "true"){
+        try {   
+            console.log(await Accounts.deleteOne({ account_number: req.body.account_number, IFSC: req.body.IFSC}).exec())
+            var response = { message: "Account deleted successfully", title: "DELETED!", icon: "success", confirmButtonText: "OK", saved: true}
+            res.send(JSON.stringify(response))
+        } catch (error) {
+            console.log(error)
+        }
+    }else{
+        res.render(__dirname + '/views/pages/Login.ejs', {
+            message: "", title: '', icon: '', confirmButtonText: ''
+        })
+    }
+})
 app.listen(3000)
