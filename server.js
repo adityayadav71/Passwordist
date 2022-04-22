@@ -1,6 +1,7 @@
 const express = require('express')
 const session = require('express-session')
 const nodemailer = require('nodemailer')
+const http = require('http')
 const ejs = require('ejs')
 var bodyParser = require('body-parser')
 const bcrypt = require('bcrypt')
@@ -13,12 +14,13 @@ const Address = require('./models/Addresses')
 const Accounts = require('./models/Accounts')
 const Passwords = require('./models/Passwords')
 const greivances = require('./models/Greivance')
+require('dotenv').config()
 const {encrypt, decrypt} = require("./public/js/EncryptionHandler.js")
 
 const app = express()
 var jsonParser = bodyParser.json()
-var urlencodedParser = bodyParser.urlencoded({ extended: false })
-const mongoURI = "mongodb://localhost:27017/users"
+let port = process.env.PORT
+const mongoURI = process.env.DATABASE
 
 mongoose.connect(mongoURI,{
     useNewUrlParser: true,
@@ -32,7 +34,7 @@ const store = MongoStore.create({
 app.set('trust proxy', 1)
 app.set('view-engine', ejs)
 app.use(session({ 
-    secret: 'g8&*&^gv087go8yg8o7',
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     store: store,
@@ -54,7 +56,6 @@ const authenticateUser = (req, res, next) =>{
         next()
     }
 }
-
 
 app.get('/', (req, res, next) =>{
     if(req.session.loggedin === "false" || req.session.loggedin === undefined || req.session.loggedin === "undefined"){
@@ -473,4 +474,4 @@ app.post('/deleteaccount', jsonParser, async (req, res) => {
         })
     }
 })
-app.listen(3000)
+app.listen(port)
