@@ -1,235 +1,311 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="icon" href="../img/LOGO.ico" type="image/x-icon" />
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Bank Account</title>
   </head>
   <style>
-      *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;    
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body{
-    position: relative; 
-    display: flex;
-    align-items: center;
-    justify-content: center;    
-    min-height: 100vh; 
-    margin-bottom: 10%;
-}
+    body {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin-bottom: 10%;
+    }
 
-.wrapper{
-    padding: 30px 45px;
-    max-width: 700px;
-    width: 100%;
-    margin: auto;
-    background: #f74d4d;
-    border-radius: 20px 100px;
-    color: #ffffff;   
-}
+    .wrapper {
+      padding: 30px 45px;
+      max-width: 700px;
+      width: 100%;
+      margin: auto;
+      background: #f74d4d;
+      border-radius: 20px 100px;
+      color: #ffffff;
+    }
 
-.wrapper::before{
-    content:'';
-    position: absolute;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url("bgimage.jpg");
-    min-height: 100vh;
-    z-index: -1;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
+    .wrapper::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-position: center center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-image: url("bgimage.jpg");
+      min-height: 100vh;
+      z-index: -1;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
 
-.wrapper .headline{
-    text-align: center;
-    padding-bottom:30px;
-    padding-top: 30px;
-    align-items: center;
-}
+    .wrapper .headline {
+      text-align: center;
+      padding-bottom: 30px;
+      padding-top: 30px;
+      align-items: center;
+    }
 
-.wrapper .headline h3{
-    font-size: 30px;
-    font-weight: bold;
-    line-height: 14px;
-    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    color: #f85151;
-    text-shadow:2px 2px 5px #925dfbef;
-    background: #ffffff;
-    width: 608px;
-    height: 52px;
-    border-radius: 100px 20px;
-    padding: 19px;  
-}
+    .wrapper .headline h3 {
+      font-size: 30px;
+      font-weight: bold;
+      line-height: 14px;
+      font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+        sans-serif;
+      color: #f85151;
+      text-shadow: 2px 2px 5px #925dfbef;
+      background: #ffffff;
+      width: 608px;
+      height: 52px;
+      border-radius: 100px 20px;
+      padding: 19px;
+    }
 
-.form-row{
-    font-weight: bold;    
-}
+    .form-row {
+      font-weight: bold;
+    }
 
-.form-control{
-    border-radius: 5px 20px;
-    border: none;   
-}
+    .form-control {
+      border-radius: 5px 20px;
+      border: none;
+    }
 
-#input-branch-address{
-    width: 300px;   
-}
+    #input-branch-address {
+      width: 300px;
+    }
 
-#input-pin{
-    width: 300px;
-}
+    #input-pin {
+      width: 300px;
+    }
 
+    .btn {
+      background-color: #9507c0;
+      border: none;
+      color: #ffffff;
+      text-align: center;
+      font-size: 20px;
+      padding: 8px;
+      width: 300px;
+      transition: all 0.5s;
+      cursor: pointer;
+      border-radius: 10px 100px;
+      font-family: sans-serif;
+      font-weight: 600;
+    }
 
-.btn {
-    background-color: #9507c0;
-    border: none;
-    color: #FFFFFF;
-    text-align: center;
-    font-size: 20px;
-    padding: 8px;
-    width: 300px;
-    transition: all 0.5s;
-    cursor: pointer;
-    border-radius: 10px 100px;
-    font-family: sans-serif;
-    font-weight: 600;
-}
-  
-.btn span {
-    cursor: pointer;
-    display: inline-block;
-    position: relative;
-    transition: 0.5s;
-}
-  
-.btn span:after {
-    content: '\00bb';
-    position: absolute;
-    opacity: 0;
-    top: 0;
-    right: -20px;
-    transition: 0.5s;
-}
-  
-.btn:hover span {
-    padding-right: 20px;
-}
-  
-.btn:hover span:after {
-    opacity: 1;
-    right: 0;
-}
-.save-buttons{
-            position: fixed;
-            display: flex;
-            bottom: 0;
-            right: 0;
-            width: 100%;
-            height: 10%;
-            background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
-            border-bottom-left-radius: 10px;
-            border-bottom-right-radius: 10px;
-            align-content: stretch;
-            flex-direction: row;
-            justify-content: flex-end;
-            align-items: center;
-            flex-wrap: nowrap;
-        }
+    .btn span {
+      cursor: pointer;
+      display: inline-block;
+      position: relative;
+      transition: 0.5s;
+    }
+
+    .btn span:after {
+      content: "\00bb";
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      right: -20px;
+      transition: 0.5s;
+    }
+
+    .btn:hover span {
+      padding-right: 20px;
+    }
+
+    .btn:hover span:after {
+      opacity: 1;
+      right: 0;
+    }
+    .save-buttons {
+      position: fixed;
+      display: flex;
+      bottom: 0;
+      right: 0;
+      width: 100%;
+      height: 10%;
+      background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      align-content: stretch;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
   </style>
   <body>
     <div class="wrapper">
       <div class="headline">
-      <h3>Add a Bank Account</h3>
+        <h3>Add a Bank Account</h3>
       </div>
       <form action="/save-accounts" method="post">
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="input-first-name">First Name</label>
-            <input type="text" class="form-control" id="input-first-name" name="fname" placeholder="Enter First Name">
+            <input
+              type="text"
+              class="form-control"
+              id="input-first-name"
+              name="fname"
+              placeholder="Enter First Name"
+            />
           </div>
           <div class="form-group col-md-6">
             <label for="input-last-name">Last Name</label>
-            <input type="text" class="form-control" id="input-last-name" name="lname" placeholder="Enter Last Name">
+            <input
+              type="text"
+              class="form-control"
+              id="input-last-name"
+              name="lname"
+              placeholder="Enter Last Name"
+            />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="input-bank-name">Bank Name</label>
-            <input type="text" class="form-control" id="input-bank-name" name="bankname" placeholder="Enter Bank Name">
-            
+            <input
+              type="text"
+              class="form-control"
+              id="input-bank-name"
+              name="bankname"
+              placeholder="Enter Bank Name"
+            />
           </div>
           <div class="form-group col-md-6">
             <label for="input-account-type">Account Type</label>
-            <select id="input-account-type" name="accounttype" class="form-control" >
-                <option value="Select">Select Your Account Type</option>
-                <option value="Current">Current</option>
-                <option value="Saving">Saving</option>
+            <select
+              id="input-account-type"
+              name="accounttype"
+              class="form-control"
+            >
+              <option value="Select">Select Your Account Type</option>
+              <option value="Current">Current</option>
+              <option value="Saving">Saving</option>
             </select>
-            
           </div>
         </div>
-        
+
         <div class="form-row">
           <div class="form-group col-md-6">
             <label for="input-account-number">Account Number</label>
-            <input type="text" class="form-control" id="input-account-number" name="accountnumber" placeholder="Enter Account Number">
+            <input
+              type="text"
+              class="form-control"
+              id="input-account-number"
+              name="accountnumber"
+              placeholder="Enter Account Number"
+            />
           </div>
           <div class="form-group col-md-6">
             <label for="input-IFSC">IFSC Code</label>
-            <input type="text" class="form-control" id="input-IFSC" name="IFSC" placeholder="Enter IFSC Code">
+            <input
+              type="text"
+              class="form-control"
+              id="input-IFSC"
+              name="IFSC"
+              placeholder="Enter IFSC Code"
+            />
           </div>
         </div>
         <div class="form-row">
           <div class="form-group col-md-4">
             <label for="input-branch-address">Branch Address</label>
-            <input type="text" class="form-control" id="input-branch-address" name="branchaddress" placeholder="Enter Branch Address"> 
+            <input
+              type="text"
+              class="form-control"
+              id="input-branch-address"
+              name="branchaddress"
+              placeholder="Enter Branch Address"
+            />
           </div>
 
-          <div class="form-group col-md-2" style="margin-left: 105px;">
+          <div class="form-group col-md-2" style="margin-left: 105px">
             <label for="input-pin">URL</label>
-            <input type="text" class="form-control" id="input-pin" name="website_url" placeholder="Enter bank website URL">
+            <input
+              type="text"
+              class="form-control"
+              id="input-pin"
+              name="website_url"
+              placeholder="Enter bank website URL"
+            />
           </div>
         </div>
         <div class="save-buttons" id="save">
-          <input type="submit" style="padding: 10px;margin: 12px;" value="Save" id="save-post-req" name="save">
-      </div>
+          <input
+            type="submit"
+            style="padding: 10px; margin: 12px"
+            value="Save"
+            id="save-post-req"
+            name="save"
+          />
+        </div>
       </form>
-      <a href="/vault" id="saved-redirect" style="display: none;" target="_top"></a>
-    </div> 
-    <script> 
-      let message = '<%-message%>'
-      let title = '<%-title%>'
-      let icon = '<%-icon%>'
-      let confirmButtonText = '<%-confirmButtonText%>'
-      if(message !== ""){
-          Swal.fire({
-              title: title,
-              text: message,
-              icon: icon,
-              confirmButtonText: confirmButtonText
-          }) 
-      }  
-      let saved = '<%-saved%>'
-      if(saved === "true"){
-          setTimeout(function(){
-              document.getElementById("saved-redirect").click()
-          }, 1500);
-      }   
-  </script>
-   <script src="main.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <a
+        href="/vault"
+        id="saved-redirect"
+        style="display: none"
+        target="_top"
+      ></a>
+    </div>
+    <script>
+      let message = "<%-message%>";
+      let title = "<%-title%>";
+      let icon = "<%-icon%>";
+      let confirmButtonText = "<%-confirmButtonText%>";
+      if (message !== "") {
+        Swal.fire({
+          title: title,
+          text: message,
+          icon: icon,
+          confirmButtonText: confirmButtonText,
+        });
+      }
+      let saved = "<%-saved%>";
+      if (saved === "true") {
+        setTimeout(function () {
+          document.getElementById("saved-redirect").click();
+        }, 1500);
+      }
+    </script>
+    <script src="main.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

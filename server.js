@@ -1,23 +1,16 @@
 const express = require("express");
 const session = require("express-session");
-const nodemailer = require("nodemailer");
 const ejs = require("ejs");
-var bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const MongoStore = require("connect-mongo");
-const User = require("./models/User");
-const Notes = require("./models/Notes");
-const Cards = require("./models/Cards");
-const Address = require("./models/Addresses");
-const Accounts = require("./models/Accounts");
-const Passwords = require("./models/Passwords");
-const greivances = require("./models/Greivance");
+const authController = require("./controllers/authController");
+const passwordController = require("./controllers/passwordController");
+const vaultController = require("./controllers/vaultController");
+const dataController = require("./controllers/dataController");
 require("dotenv").config();
-const { encrypt, decrypt } = require("./public/js/EncryptionHandler.js");
 
 const app = express();
-var jsonParser = bodyParser.json();
+
 let port = process.env.PORT;
 const mongoURI = process.env.DATABASE;
 
@@ -45,699 +38,96 @@ app.use(
     },
   })
 );
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
-const authenticateUser = (req, res, next) => {
-  if (
-    req.session.loggedin === undefined ||
-    req.session.loggedin === "undefined"
-  ) {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  } else {
-    next();
-  }
-};
+// 1. AUTHENTICATION ROUTES
+app.get("/", authController.index);
+app.get("/login", authController.authenticateUser, authController.getLoginPage);
+app.get(
+  "/masterpassword",
+  authController.authenticateUser,
+  passwordController.getMasterPassword
+);
+app.get("/generatepassword", passwordController.generatePassword);
+app.post("/", authController.signup);
+app.post("/validateotp", authController.validateOTP);
+app.post("/setmasterpassword", passwordController.setMasterPassword);
+app.post("/login", authController.login);
+app.post("/logout", authController.logout);
+app.post("/decryptpassword", dataController.decryptPassword);
 
-app.get("/", (req, res, next) => {
-  if (
-    req.session.loggedin === "false" ||
-    req.session.loggedin === undefined ||
-    req.session.loggedin === "undefined"
-  ) {
-    req.session.loggedin = "undefined";
-    res.render(__dirname + "/views/pages/index.ejs", {
-      message: "",
-      username: req.session.username,
-      loggedin: "false",
-      title: "Error!",
-      icon: "error",
-      confirmButtonText: "Try again",
-    });
-  } else {
-    req.session.lastaccessed = Date.now();
-    res.render(__dirname + "/views/pages/index.ejs", {
-      message: "",
-      username: req.session.username,
-      loggedin: "true",
-      title: "Error!",
-      icon: "error",
-      confirmButtonText: "Try again",
-    });
-  }
-  next();
-});
+// 2. VAULT ROUTES
+app.get("/vault", authController.authenticateUser, vaultController.vault);
+app.get(
+  "/passwords",
+  authController.authenticateUser,
+  vaultController.getPasswordsPage
+);
+app.get(
+  "/notes",
+  authController.authenticateUser,
+  vaultController.getNotesPage
+);
+app.get(
+  "/addresses",
+  authController.authenticateUser,
+  vaultController.getAddressesPage
+);
+app.get(
+  "/cards",
+  authController.authenticateUser,
+  vaultController.getCardsPage
+);
+app.get(
+  "/accounts",
+  authController.authenticateUser,
+  vaultController.getAccountsPage
+);
 
-app.get("/login", authenticateUser, async (req, res) => {
-  if (req.session !== undefined) {
-    res.render(__dirname + "/views/pages/vault.ejs", {
-      email: req.session.email,
-    });
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
+// 3. USER VAULT DATA ROUTES
+app.get("/getmypass", vaultController.getPasswords);
+app.get("/getmynotes", vaultController.getNotes);
+app.get("/getmyaddresses", vaultController.getAddresses);
+app.get("/getmycards", vaultController.getCards);
+app.get("/getmyaccounts", vaultController.getAccounts);
 
-app.get("/masterpassword", authenticateUser, (req, res) => {
-  if (req.session) {
-    res.render(__dirname + "/views/pages/MasterPassword.ejs", {
-      username: req.session.id,
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-    });
-  }
-});
+// 4. MISCELLANEOUS ROUTES
+app.get("/contact", dataController.contact);
+app.post("/greivance", dataController.greivances);
 
-app.get("/generatepassword", (req, res) => {
-  res.render(__dirname + "/views/pages/generate_password.ejs");
-});
+// 4. DATA CONTROL ROUTES
+app.post(
+  "/save-passwords",
+  authController.authenticateUser,
+  dataController.savePasswords
+);
+app.post(
+  "/save-notes",
+  authController.authenticateUser,
+  dataController.saveNotes
+);
+app.post(
+  "/save-cards",
+  authController.authenticateUser,
+  dataController.saveCards
+);
+app.post(
+  "/save-addresses",
+  authController.authenticateUser,
+  dataController.saveAddresses
+);
+app.post(
+  "/save-accounts",
+  authController.authenticateUser,
+  dataController.saveAccounts
+);
 
-app.get("/contact", (req, res) => {
-  res.render(__dirname + "/views/pages/contact.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-  });
-});
+app.post("/deletepass", dataController.deletePassword);
+app.post("/deletenote", dataController.deleteNote);
+app.post("/deleteadd", dataController.deleteAddress);
+app.post("/deletecard", dataController.deleteCard);
+app.post("/deleteaccount", dataController.deleteAccount);
 
-app.get("/vault", authenticateUser, (req, res) => {
-  // user should be authenticated before they can access the vault
-  res.render(__dirname + "/views/pages/vault.ejs", {
-    email: req.session.email,
-  });
-});
-
-app.get("/passwords", authenticateUser, (req, res) => {
-  res.render(__dirname + "/views/partials/_passwords.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-    saved: false,
-  });
-});
-app.get("/notes", authenticateUser, (req, res) => {
-  res.render(__dirname + "/views/partials/_notes.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-    saved: false,
-  });
-});
-app.get("/addresses", authenticateUser, (req, res) => {
-  res.render(__dirname + "/views/partials/_addresses.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-    saved: false,
-  });
-});
-app.get("/cards", authenticateUser, (req, res) => {
-  res.render(__dirname + "/views/partials/_cards.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-    saved: false,
-  });
-});
-app.get("/accounts", authenticateUser, (req, res) => {
-  res.render(__dirname + "/views/partials/_accounts.ejs", {
-    message: "",
-    title: "",
-    icon: "",
-    confirmButtonText: "",
-    saved: false,
-  });
-});
-
-app.get("/getmypass", async (req, res) => {
-  res.send(
-    JSON.stringify(
-      await Passwords.find({
-        username: req.session.username,
-      }).exec()
-    )
-  );
-});
-app.get("/getmynotes", async (req, res) => {
-  res.send(
-    JSON.stringify(await Notes.find({ username: req.session.username }).exec())
-  );
-});
-app.get("/getmyaddresses", async (req, res) => {
-  res.send(
-    JSON.stringify(
-      await Address.find({ username: req.session.username }).exec()
-    )
-  );
-});
-app.get("/getmycards", async (req, res) => {
-  res.send(
-    JSON.stringify(await Cards.find({ username: req.session.username }).exec())
-  );
-});
-app.get("/getmyaccounts", async (req, res) => {
-  res.send(
-    JSON.stringify(
-      await Accounts.find({ username: req.session.username }).exec()
-    )
-  );
-});
-
-function between(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-random = between(100000, 999999).toString();
-app.post("/", async (req, res) => {
-  var email = req.body.email;
-  var username = req.body.username;
-  req.session.username = username;
-  req.session.email = email;
-  req.session.otp = random;
-  req.session.loggedin = "false";
-  req.session.lastaccessed = Date.now();
-  req.session.createdOn = Date.now();
-  async function emailexists(email) {
-    try {
-      var Exists = await User.findOne({ email: email }).exec();
-    } catch (err) {
-      console.error(err);
-    }
-    return Exists !== null;
-  }
-  if ((await User.findOne({ username: username }).exec()) !== null) {
-    res.render(__dirname + "/views/pages/index.ejs", {
-      message: "Username already registered",
-      username: req.session.username,
-      loggedin: false,
-      title: "Error!",
-      icon: "error",
-      confirmButtonText: "Try again",
-    });
-  }
-  if (await emailexists(email)) {
-    res.render(__dirname + "/views/pages/index.ejs", {
-      message: "Email already registered",
-      username: req.session.username,
-      loggedin: false,
-      title: "Error!",
-      icon: "error",
-      confirmButtonText: "Try again",
-    });
-  } else {
-    try {
-      const transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "pwdt1088@gmail.com",
-          pass: "hagtcjxebiprcqlz",
-        },
-      });
-      const options = {
-        from: "pwdt1088@gmail.com",
-        to: email,
-        subject: "Your Account Activation Code: ",
-        html: `<h1> Welcome aboard!</h1><h2>Your Email was recently used to register at Passwordist, activate your account using the below code:</h2><p style="text-align: center; font-size: x-large;"><b>${random}</b></p>`,
-      };
-      transporter.sendMail(options, function (err, info) {
-        if (err) {
-          console.log(err);
-        }
-      });
-      res.render(__dirname + "/views/pages/verify_otp.ejs", {
-        email: email,
-        message: "",
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-});
-app.post("/validateotp", async (req, res) => {
-  const givenotp = req.session.otp;
-  var otpstring =
-    req.body.first +
-    req.body.second +
-    req.body.third +
-    req.body.fourth +
-    req.body.fifth +
-    req.body.sixth;
-  var inputotp = otpstring.toString();
-  if (givenotp === inputotp) {
-    var user = new User({
-      username: req.session.username,
-      email: req.session.email,
-      createdOn: req.session.createdOn,
-    });
-    user.save(),
-      function (err, collection) {
-        if (err) {
-          throw err;
-        }
-        console.log("User Created Successfully!");
-      };
-    res.render(__dirname + "/views/pages/MasterPassword.ejs", {
-      username: req.session.username,
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  } else {
-    res.render(__dirname + "/views/pages/verify_otp.ejs", {
-      email: req.session.email,
-      message: "Invalid OTP",
-    });
-  }
-});
-
-app.post("/setmasterpassword", async (req, res) => {
-  var password = req.body.master;
-  var confirmation = req.body.confirmpass;
-  if (password === confirmation) {
-    try {
-      console.log(
-        await User.findOneAndUpdate(
-          { email: req.session.email },
-          {
-            $set: { password: await bcrypt.hash(password, 12) },
-            lastUpdatedPasswordOn: Date.now(),
-          }
-        ).exec()
-      );
-      res.render(__dirname + "/views/pages/Login.ejs", {
-        message:
-          "Master password set successfully, you can now login to your vault!",
-        title: "CREATED!",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/MasterPassword.ejs", {
-      username: req.session.username,
-      message: "Passwords do not match!",
-    });
-  }
-});
-
-app.post("/login", (req, res) => {
-  User.findOne({ email: req.body.email }).exec(function (error, user) {
-    if (error) {
-      callback({ error: true });
-    } else if (!user) {
-      res.render(__dirname + "/views/pages/login.ejs", {
-        message: "No user with that email",
-        title: "Error!",
-        icon: "error",
-        confirmButtonText: "Try again",
-      });
-    } else {
-      user.comparePassword(req.body.password, function (matchError, isMatch) {
-        if (matchError) {
-          res.render(__dirname + "/views/pages/Login.ejs", {
-            message: "Match Error",
-            title: "Error!",
-            icon: "error",
-            confirmButtonText: "Try again",
-          });
-        } else if (!isMatch) {
-          res.render(__dirname + "/views/pages/Login.ejs", {
-            message: "Invalid Password",
-            title: "Error!",
-            icon: "error",
-            confirmButtonText: "Try again",
-          });
-        } else {
-          req.session.username = user.username;
-          req.session.email = user.email;
-          req.session.otp = user.otp;
-          req.session.loggedin = "true";
-          req.session.lastaccessed = Date.now();
-          res.render(__dirname + "/views/pages/vault.ejs", {
-            email: req.session.email,
-          });
-        }
-      });
-    }
-  });
-});
-
-app.post("/greivance", async (req, res) => {
-  await new greivances({
-    username: req.session.username,
-    first_name: req.body.fname,
-    email: req.body.email,
-    country: req.body.country,
-    subject: req.body.subject,
-  }).save();
-  res.render(__dirname + "/views/pages/contact.ejs", {
-    message: "Greivance submitted, we will get back to you soon!",
-    title: "SENT!",
-    icon: "success",
-    confirmButtonText: "OK",
-  });
-});
-app.post("/logout", (req, res) => {
-  if (req.session.loggedin !== undefined || req.session.loggedin === "true") {
-    req.session.loggedin = "false";
-    req.session.destroy();
-  }
-  res.render(__dirname + "/views/pages/index.ejs", {
-    message: "You have been logged out successfully",
-    username: "",
-    loggedin: false,
-    title: "LOGGED OUT!",
-    icon: "success",
-    confirmButtonText: "OK",
-  });
-});
-app.post("/decryptpassword", jsonParser, (req, res) => {
-  res.send(
-    JSON.stringify(decrypt({ iv: req.body.iv, password: req.body.password }))
-  );
-});
-app.post("/save-passwords", async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      var web_pass = req.body.site_password;
-      const encryptedPassword = encrypt(web_pass);
-      await new Passwords({
-        username: req.session.username,
-        website_name: req.body.website_name,
-        website_url: req.body.website_url,
-        website_username: req.body.site_username,
-        website_password: encryptedPassword.password,
-        iv: encryptedPassword.iv,
-      }).save();
-      res.render(__dirname + "/views/partials/_passwords.ejs", {
-        message: "Password added successfully",
-        title: "CREATED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/save-notes", async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await new Notes({
-        username: req.session.username,
-        title: req.body.title,
-        date: req.body.date,
-        color: req.body.color,
-        time: req.body.time,
-        note: req.body.note,
-      }).save();
-      res.render(__dirname + "/views/partials/_notes.ejs", {
-        message: "Note created successfully",
-        title: "CREATED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/save-cards", async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await new Cards({
-        username: req.session.username,
-        bank_website: req.body.bank_website,
-        bank_name: req.body.bank_name,
-        card_number: req.body.card_number,
-        card_holder_name: req.body.card_holder_name,
-        card_type: req.body.card_type,
-        expiry_date: req.body.expiry_date,
-        CVV: req.body.CVV,
-      }).save();
-      res.render(__dirname + "/views/partials/_cards.ejs", {
-        message: "Credit card added successfully",
-        title: "ADDED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/save-addresses", async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await new Address({
-        username: req.session.username,
-        first_name: req.body.fname,
-        last_name: req.body.lname,
-        company_name: req.body.companyname,
-        address: req.body.address,
-        city: req.body.city,
-        country: req.body.country,
-        state: req.body.state,
-        postalcode: req.body.postalcode,
-      }).save();
-      res.render(__dirname + "/views/partials/_addresses.ejs", {
-        message: "Address added successfully",
-        title: "ADDED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/save-accounts", async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await new Accounts({
-        username: req.session.username,
-        first_name: req.body.fname,
-        last_name: req.body.lname,
-        bank_name: req.body.bankname,
-        account_type: req.body.accounttype,
-        account_number: req.body.accountnumber,
-        IFSC: req.body.IFSC,
-        branch_address: req.body.branchaddress,
-        website_url: req.body.website_url,
-      }).save();
-      res.render(__dirname + "/views/partials/_accounts.ejs", {
-        message: "Account added successfully",
-        title: "ADDED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/deletepass", jsonParser, async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await Passwords.deleteOne({
-        website_username: req.body.username,
-        website_name: req.body.website_name,
-      }).exec();
-      var response = {
-        message: "Password deleted successfully",
-        title: "DELETED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      };
-      res.send(JSON.stringify(response));
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/deletenote", jsonParser, async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      await Notes.deleteOne({
-        title: req.body.title,
-        notename: req.body.notename,
-      }).exec();
-      var response = {
-        message: "Password deleted successfully",
-        title: "DELETED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      };
-      res.send(JSON.stringify(response));
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/deleteadd", jsonParser, async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      console.log(
-        await Address.deleteOne({
-          company_name: req.body.company_name,
-          address: req.body.address,
-        }).exec()
-      );
-      var response = {
-        message: "Address deleted successfully",
-        title: "DELETED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      };
-      res.send(JSON.stringify(response));
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/deletecard", jsonParser, async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      console.log(
-        await Cards.deleteOne({
-          card_number: req.body.card_number,
-          CVV: req.body.CVV,
-        }).exec()
-      );
-      var response = {
-        message: "Card deleted successfully",
-        title: "DELETED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      };
-      res.send(JSON.stringify(response));
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
-app.post("/deleteaccount", jsonParser, async (req, res) => {
-  if (req.session.loggedin === "true") {
-    try {
-      console.log(
-        await Accounts.deleteOne({
-          account_number: req.body.account_number,
-          IFSC: req.body.IFSC,
-        }).exec()
-      );
-      var response = {
-        message: "Account deleted successfully",
-        title: "DELETED!",
-        icon: "success",
-        confirmButtonText: "OK",
-        saved: true,
-      };
-      res.send(JSON.stringify(response));
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    res.render(__dirname + "/views/pages/Login.ejs", {
-      message: "",
-      title: "",
-      icon: "",
-      confirmButtonText: "",
-    });
-  }
-});
 app.listen(port);

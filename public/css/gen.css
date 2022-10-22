@@ -1,125 +1,126 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 
 * {
-	box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-	background-color: #fff;
-	color: black;
-	display: flex;
-	font-family: "Poppins", sans-serif;
-    flex-direction: column;
-	min-height: 80vh;
+  background-color: #fff;
+  color: black;
+  display: flex;
+  font-family: "Poppins", sans-serif;
+  flex-direction: column;
+  min-height: 80vh;
 }
 
 p {
-	margin: 5px 0;
+  margin: 5px 0;
 }
 
 h2 {
-	margin: 10px 0 20px;
-	text-align: center;
+  margin: 10px 0 20px;
+  text-align: center;
 }
 
-input[type=checkbox] {
-	margin-right: 0;
+input[type="checkbox"] {
+  margin-right: 0;
 }
-.navbar{
-    margin-bottom: 10px;
-    padding: 5px;
-    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
+.navbar {
+  margin-bottom: 10px;
+  padding: 5px;
+  box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgba(93, 95, 239, 0.25);
 }
 
 .logo {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 3%;
-    height: 7%;
-    top: 2%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 3%;
+  height: 7%;
+  top: 2%;
 }
-.container_head{
-    background-color: #fff;
-	color: black;
-	display: flex;
-	font-family: 'Muli', sans-serif;
-	align-items: center;
-	padding: 10px;
-    flex-direction: row;
-	min-height: 100vh;
+.container_head {
+  background-color: #fff;
+  color: black;
+  display: flex;
+  font-family: "Muli", sans-serif;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  min-height: 100vh;
 }
 .container {
-	padding: 20px;
-	width: 350px;
-	max-width: 100%;
-    box-shadow:7.44255px 13.8851px 132.4944px 22.3276px rgb(144 181 232 / 40%);
+  margin-left: 10px;
+  padding: 20px;
+  width: 350px;
+  max-width: 100%;
+  box-shadow: 7.44255px 13.8851px 132.4944px 22.3276px rgb(144 181 232 / 40%);
 }
 
 .result-container {
-    	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	position: relative;
-	font-size: 18px;
-	letter-spacing: 1px;
-	padding: 12px 10px;
-	height: 50px;
-	width: 100%;
-    border-radius: 14.89cm;
-    box-shadow: -20px -14px 45px 0px #b6b6d5;;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+  font-size: 18px;
+  letter-spacing: 1px;
+  padding: 12px 10px;
+  height: 50px;
+  width: 100%;
+  border-radius: 14.89cm;
+  box-shadow: -20px -14px 45px 0px #b6b6d5;
 }
 
 .result-container #result {
-  	word-wrap: break-word;
-	max-width: calc(100% - 40px);
-    
+  word-wrap: break-word;
+  max-width: calc(100% - 40px);
 }
 
 .result-container .btn {
-	font-size: 20px;
-	position: absolute;
-	top: 5px;
-	right: 5px;
-	height: 40px;
-	width: 40px;
+  font-size: 20px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  height: 40px;
+  width: 40px;
 }
 
 .btn {
-	border: none;
-	color: #fff;
-	cursor: pointer;
-	font-size: 16px;
-	padding: 8px 12px;
-	/* background-color: #3B3B98; */
-    border-radius: 14.89cm;
-    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 8px 12px;
+  /* background-color: #3B3B98; */
+  border-radius: 14.89cm;
+  box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
 }
-.btn img{
-    position: relative;
-    right: 4px;
+.btn img {
+  position: relative;
+  right: 4px;
 }
 
 .btn-large {
-	display: block;
-	width: 100%;
-    	background-color: #3B3B98;
-
+  display: block;
+  width: 100%;
+  background-color: #3b3b98;
 }
 
 .setting {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	margin: 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
 }
-.form{
-    display: flex;
-    margin-left: 20%;
+.form {
+  display: flex;
+  margin-left: 20%;
 }
 
 @media screen and (max-width: 400px) {
-	.result-container {
-		font-size: 14px;
-	}
+  .result-container {
+    font-size: 14px;
+  }
 }

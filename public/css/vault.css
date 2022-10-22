@@ -14,25 +14,25 @@ input:focus {
 }
 .login {
   position: relative;
-    flex: 0 25%;
-    width: fit-content;
-    height: 50px;
-    color: #ffffff;
-    padding-left: 43px;
-    padding-right: 43px;
-    margin-right: 43px;
-    font-weight: 550;
-    margin-top: 5px;
-    font-size: 16px;
-    line-height: 33px;
-    border: none;
-    outline: none;
-    background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
-    border-radius: 29.7702px;
-    box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
-    text-shadow: 0px 2.97702px 2.97702px rgb(0 0 0 / 25%);
+  flex: 0 25%;
+  width: fit-content;
+  height: 50px;
+  color: #ffffff;
+  padding-left: 43px;
+  padding-right: 43px;
+  margin-right: 43px;
+  font-weight: 550;
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 33px;
+  border: none;
+  outline: none;
+  background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
+  border-radius: 29.7702px;
+  box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
+  text-shadow: 0px 2.97702px 2.97702px rgb(0 0 0 / 25%);
 }
-.login:hover{
+.login:hover {
   cursor: pointer;
 }
 .navbar {
@@ -137,12 +137,12 @@ input {
 .sidebar .openbtn:hover {
   cursor: pointer;
 }
-.addcard{
+.addcard {
   position: fixed;
   align-items: center;
   padding: 10px;
   bottom: 10px;
-  right: 10px; 
+  right: 10px;
   width: 70px;
   z-index: 100;
   height: 70px;
@@ -152,17 +152,17 @@ input {
   border-radius: 50%;
   box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
 }
-.addcard:hover{
+.addcard:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
-.addcard2{
+.addcard2 {
   display: none;
   position: fixed;
   align-items: center;
   padding: 10px;
   bottom: 116px;
-  right: 10px; 
+  right: 10px;
   width: 70px;
   z-index: 100;
   height: 70px;
@@ -172,28 +172,28 @@ input {
   border-radius: 50%;
   box-shadow: 7.44255px 14.8851px 26.0489px 9.67531px rgb(93 95 239 / 25%);
 }
-.addcard2:hover{
+.addcard2:hover {
   cursor: pointer;
   transform: scale(1.1);
 }
-.addform{
+.addform {
   position: fixed;
-    display: none;
-    width: 80vw;
-    height: 43vw;
-    left: 144px;
-    margin-top: 3%;
-    top: 10px;
-    border: none;
-    outline: 1px solid #4776e6;
-    border-radius: 10px;
-    cursor: pointer;
-    z-index: 100;
+  display: none;
+  width: 80vw;
+  height: 43vw;
+  left: 144px;
+  margin-top: 3%;
+  top: 10px;
+  border: none;
+  outline: 1px solid #4776e6;
+  border-radius: 10px;
+  cursor: pointer;
+  z-index: 100;
 }
-.form{
+.form {
   background-color: lightgray;
 }
-.save-buttons{
+.save-buttons {
   position: fixed;
   display: none;
   top: 4%;
@@ -202,8 +202,8 @@ input {
   width: 80%;
   height: 10%;
   z-index: 100;
-}  
-button:hover{
+}
+button:hover {
   cursor: pointer;
 }
 #main {
@@ -269,17 +269,17 @@ li.menu-item {
   -o-animation: fadeIn 1s;
   -ms-animation: fadeIn 1s;
 }
-.nothing{
+.nothing {
   animation: fadeIn 1s;
   -webkit-animation: fadeIn 1s;
   -moz-animation: fadeIn 1s;
   -o-animation: fadeIn 1s;
   -ms-animation: fadeIn 1s;
 }
-.grid{
+.grid {
   display: block;
   position: relative;
-  background-color: rgba(255, 255, 255, 0.8);  
+  background-color: rgba(255, 255, 255, 0.8);
   box-shadow: 0px 0px 2px 0px rgb(61, 61, 61);
   width: 28%;
   margin: 2%;
@@ -311,38 +311,42 @@ li.menu-item {
   flex-direction: column;
   align-items: center;
 }
-.grid:hover .test{
-    z-index: -1;
-    cursor: pointer;
-    transition: 0.5s ease-in;
-    background: #b7a4f1;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+.grid:hover .test {
+  z-index: -1;
+  cursor: pointer;
+  transition: 0.5s ease-in;
+  background: #b7a4f1;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
 }
-.grid:hover{
+.grid:hover {
   cursor: pointer;
 }
-.grid:hover .copy-button{
-    display: flex;
-    position: absolute;
-    margin-top: 18%;
-    z-index: 1;
-    cursor: pointer;
-    animation: fadeIn 1s;
-    -webkit-animation: fadeIn 1s;
-    -moz-animation: fadeIn 1s;
-    -o-animation: fadeIn 1s;
-    -ms-animation: fadeIn 1s;
+.grid:hover .copy-button {
+  display: flex;
+  position: absolute;
+  margin-top: 18%;
+  z-index: 1;
+  cursor: pointer;
+  animation: fadeIn 1s;
+  -webkit-animation: fadeIn 1s;
+  -moz-animation: fadeIn 1s;
+  -o-animation: fadeIn 1s;
+  -ms-animation: fadeIn 1s;
 }
-.grid:hover .name{
-  color:rgb(0, 0, 0);
+.grid:hover .name {
+  color: rgb(0, 0, 0);
   text-shadow: none;
 }
 @keyframes fadeIn {
-  0% {opacity:0;}
-  100% {opacity:1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
-.copy-button{
+.copy-button {
   display: none;
   justify-content: center;
   border-radius: 10px;
@@ -353,18 +357,18 @@ li.menu-item {
   height: 35%;
   font-size: large;
   color: white;
-	background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
-	border: 5px solid transparent;
-	transition: .3s ease;
-	border-radius: 50px;
+  background: linear-gradient(90deg, #4776e6 0%, #8e54e9 100%);
+  border: 5px solid transparent;
+  transition: 0.3s ease;
+  border-radius: 50px;
 }
-.copy-button:hover{
+.copy-button:hover {
   color: #4776e6;
   background: white;
   cursor: pointer;
-	background-color: white;
-	transform: scale(1.1);
-	border: 5px solid #4776e6;
+  background-color: white;
+  transform: scale(1.1);
+  border: 5px solid #4776e6;
 }
 .label {
   display: flex;
@@ -387,7 +391,7 @@ li.menu-item {
   font-size: 15px;
   margin-left: 10px;
   color: transparent;
-  text-shadow: 0 0 5px rgba(0,0,0,0.5);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 .name2 {
   display: -webkit-box;
@@ -429,7 +433,7 @@ li.menu-item {
 .tooltip:hover .tooltiptext {
   visibility: visible;
 }
-.searchbutton:hover{
+.searchbutton:hover {
   cursor: pointer;
   background-color: #818181;
 }
