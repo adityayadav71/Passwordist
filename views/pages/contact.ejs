@@ -1,10 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="../img/LOGO.ico" type="image/x-icon" />
+    <%- include('../partials/_header') %>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <title>Contact Us</title>
   </head>
@@ -21,7 +18,7 @@
       margin-top: 129px;
     }
 
-    input[type="text"],
+    input,
     select,
     textarea {
       width: 100%;
@@ -95,10 +92,10 @@
         <form action="/greivance" method="post">
           <label for="fname">Name</label>
           <input type="text" id="name" name="fname" placeholder="Your name.." />
-          <label for="lname">Email</label>
+          <label for="email">Email</label>
           <input
-            type="email"
-            id="lname"
+            type="text"
+            id="email"
             name="email"
             placeholder="Your email associated with passwordist account.."
           />
