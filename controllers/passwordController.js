@@ -26,18 +26,15 @@ exports.setMasterPassword = async (req, res) => {
   var confirmation = req.body.confirmpass;
   if (password === confirmation) {
     try {
-      console.log(
-        await User.findOneAndUpdate(
-          { email: req.session.email },
-          {
-            $set: { password: await bcrypt.hash(password, 12) },
-            lastUpdatedPasswordOn: Date.now(),
-          }
-        ).exec()
-      );
+      await User.findOneAndUpdate(
+        { email: req.session.email },
+        {
+          $set: { password: await bcrypt.hash(password, 12) },
+          lastUpdatedPasswordOn: Date.now(),
+        }
+      ).exec();
       res.render("../views/pages/Login.ejs", {
-        message:
-          "Master password set successfully, you can now login to your vault!",
+        message: "Master password set successfully, you can now login to your vault!",
         title: "CREATED!",
         icon: "success",
         confirmButtonText: "OK",

@@ -121,7 +121,7 @@ exports.signup = async (req, res) => {
       };
       transporter.sendMail(options, function (err, info) {
         if (err) {
-          console.log(err);
+          console.error(err);
         }
       });
       res.render("../views/pages/verify_otp.ejs", {
@@ -129,7 +129,7 @@ exports.signup = async (req, res) => {
         message: "",
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 };
@@ -155,7 +155,6 @@ exports.validateOTP = async (req, res) => {
         if (err) {
           throw err;
         }
-        console.log("User Created Successfully!");
       };
     res.render("../views/pages/MasterPassword.ejs", {
       username: req.session.username,

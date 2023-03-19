@@ -418,7 +418,6 @@
         var username = document.getElementById("username-" + idx).innerHTML;
         async function deletecard() {
           data = { username: username, website_name: website_name };
-          console.log(data);
           const response = await fetch("/deletepass", {
             method: "POST",
             headers: {

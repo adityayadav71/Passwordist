@@ -38,10 +38,7 @@ exports.savePasswords = async (req, res) => {
       website_password: encryptedPassword.password,
       iv: encryptedPassword.iv,
     }).save();
-    res.render(
-      "../views/partials/_passwords.ejs",
-      successOptions("Password", "saved")
-    );
+    res.render("../views/partials/_passwords.ejs", successOptions("Password", "saved"));
   } catch (error) {
     handleError(error);
   }
@@ -74,10 +71,7 @@ exports.saveAddresses = async (req, res) => {
       state: req.body.state,
       postalcode: req.body.postalcode,
     }).save();
-    res.render(
-      "../views/partials/_addresses.ejs",
-      successOptions("Address", "saved")
-    );
+    res.render("../views/partials/_addresses.ejs", successOptions("Address", "saved"));
   } catch (error) {
     handleError(error);
   }
@@ -112,10 +106,7 @@ exports.saveAccounts = async (req, res) => {
       branch_address: req.body.branchaddress,
       website_url: req.body.website_url,
     }).save();
-    res.render(
-      "../views/partials/_accounts.ejs",
-      successOptions("Account", "saved")
-    );
+    res.render("../views/partials/_accounts.ejs", successOptions("Account", "saved"));
   } catch (error) {
     handleError(error);
   }
@@ -146,12 +137,10 @@ exports.deleteNote = async (req, res) => {
 };
 exports.deleteAddress = async (req, res) => {
   try {
-    console.log(
-      await Address.deleteOne({
-        company_name: req.body.company_name,
-        address: req.body.address,
-      }).exec()
-    );
+    await Address.deleteOne({
+      company_name: req.body.company_name,
+      address: req.body.address,
+    }).exec();
     res.send(JSON.stringify(successOptions("Address", "deleted")));
   } catch (error) {
     handleError(error);
@@ -159,12 +148,10 @@ exports.deleteAddress = async (req, res) => {
 };
 exports.deleteCard = async (req, res) => {
   try {
-    console.log(
-      await Cards.deleteOne({
-        card_number: req.body.card_number,
-        CVV: req.body.CVV,
-      }).exec()
-    );
+    await Cards.deleteOne({
+      card_number: req.body.card_number,
+      CVV: req.body.CVV,
+    }).exec();
     res.send(JSON.stringify(successOptions("Card", "deleted")));
   } catch (error) {
     handleError(error);
@@ -172,12 +159,10 @@ exports.deleteCard = async (req, res) => {
 };
 exports.deleteAccount = async (req, res) => {
   try {
-    console.log(
-      await Accounts.deleteOne({
-        account_number: req.body.account_number,
-        IFSC: req.body.IFSC,
-      }).exec()
-    );
+    await Accounts.deleteOne({
+      account_number: req.body.account_number,
+      IFSC: req.body.IFSC,
+    }).exec();
     res.send(JSON.stringify(successOptions("Account", "deleted")));
   } catch (error) {
     handleError(error);
@@ -206,7 +191,5 @@ exports.contact = (req, res) => {
 };
 
 exports.decryptPassword = (req, res) => {
-  res.send(
-    JSON.stringify(decrypt({ iv: req.body.iv, password: req.body.password }))
-  );
+  res.send(JSON.stringify(decrypt({ iv: req.body.iv, password: req.body.password })));
 };
